@@ -854,14 +854,7 @@
             adminSubTab: 'requests',
             accounts: [...DEFAULT_ACCOUNTS],
             inventory: [
-                { id: 'INV-01', type: 'Ruangan', name: 'Lab Komputer 01', stock: 1, location: 'Gedung Utama Lt. 2', defaultEquipments: ['PC Client 36 Unit', 'AC 2 Unit', 'Proyektor & Layar', 'Sound Room'] },
-                { id: 'INV-02', type: 'Ruangan', name: 'Lab IPA', stock: 1, location: 'Gedung Sayap Barat', defaultEquipments: ['Meja Praktikum', 'Mikroskop', 'Wastafel', 'Papan Tulis'] },
-                { id: 'INV-03', type: 'Ruangan', name: 'Aula Serbaguna UPTD SMPN 34', stock: 1, location: 'Lantai 3', defaultEquipments: ['Podium Utama', 'Sound System Central', 'AC Central', 'Kursi 200 Unit'] },
-                { id: 'INV-04', type: 'Ruangan', name: 'Lapangan Olahraga Utama', stock: 1, location: 'Area Terbuka Sekolah', defaultEquipments: ['Ring Basket', 'Net Voli', 'Tiang Bendera'] },
-                { id: 'INV-05', type: 'Barang', name: 'LCD Projector Portable EPSON 01', stock: 5, location: 'Ruang Sarpras', defaultEquipments: ['Kabel Power', 'Kabel HDMI 5m', 'Kabel VGA', 'Remote', 'Tas Protektor'] },
-                { id: 'INV-06', type: 'Barang', name: 'Sound System Wireless Portable', stock: 3, location: 'Ruang Sarpras', defaultEquipments: ['2 Mic Wireless', 'Kabel Power', 'Baterai Cas', 'Stand Speaker'] },
-                { id: 'INV-07', type: 'Barang', name: 'Laptop Unit Operasional 01', stock: 10, location: 'Lab Komputer', defaultEquipments: ['Charger Laptop', 'Mouse Wireless', 'Tas Laptop'] },
-                { id: 'INV-08', type: 'Barang', name: 'Paket Alat Olahraga (Bola & Net)', stock: 4, location: 'Gudang Olahraga', defaultEquipments: ['5 Bola Voli', '5 Bola Basket', 'Pompa Bola'] }
+                { id: 'INV-01', type: 'Ruangan', name: 'Lab Komputer 01', stock: 1, location: 'Gedung Utama Lt. 2', defaultEquipments: ['PC Client 36 Unit', 'AC 2 Unit', 'Proyektor & Layar', 'Sound Room'] }
             ],
             bookings: [
                 {
@@ -875,34 +868,6 @@
                     endTime: '23:59',
                     equipments: ['PC Client 36 Unit', 'Proyektor & Layar'],
                     notes: 'Membutuhkan koneksi internet aktif.',
-                    status: 'Terdaftar',
-                    createdAt: new Date().toISOString()
-                },
-                {
-                    id: 'REQ-1002',
-                    borrowerName: 'Ahmad Fauzi, S.Pd.',
-                    subject: 'IPA Fisika - Gelombang',
-                    facilityType: 'Barang',
-                    targetItem: 'LCD Projector Portable EPSON 01',
-                    date: getTodayDateStr(0),
-                    startTime: '00:00',
-                    endTime: '06:00',
-                    equipments: ['Kabel Power', 'Kabel HDMI 5m', 'Tas Protektor'],
-                    notes: 'Untuk presentasi materi di kelas 8B.',
-                    status: 'Terdaftar',
-                    createdAt: new Date().toISOString()
-                },
-                {
-                    id: 'REQ-1003',
-                    borrowerName: 'Siti Aminah, S.Pd.',
-                    subject: 'Seni Budaya - Pentas Seni',
-                    facilityType: 'Ruangan',
-                    targetItem: 'Aula Serbaguna UPTD SMPN 34',
-                    date: getTodayDateStr(1),
-                    startTime: '09:00',
-                    endTime: '13:00',
-                    equipments: ['Podium Utama', 'Sound System Central'],
-                    notes: 'Latihan gladi bersih siswa.',
                     status: 'Terdaftar',
                     createdAt: new Date().toISOString()
                 }
