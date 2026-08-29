@@ -1,0 +1,2115 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SARPRAS - SMPN 34 DEPOK</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            blue: '#1e40af',
+                            darkblue: '#1e3a8a',
+                            lightblue: '#3b82f6',
+                            orange: '#f97316',
+                            darkorange: '#ea580c',
+                            lightorange: '#ffedd5',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- SheetJS for Excel Export -->
+    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .sidebar-active { background-color: #f97316; color: #ffffff !important; font-weight: 700; }
+        
+        /* Printable receipt styling */
+        @media print {
+            body * { visibility: hidden; }
+            #printable-receipt, #printable-receipt * { visibility: visible; }
+            #printable-receipt { position: absolute; left: 0; top: 0; width: 100%; margin: 0; padding: 20px; }
+        }
+    </style>
+</head>
+<body class="bg-slate-100 text-slate-800 min-h-screen flex flex-col font-sans">
+
+    <!-- Halaman Login -->
+    <section id="login-screen" class="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-900 via-brand-blue to-blue-950 p-4 w-full z-50 fixed inset-0 overflow-y-auto">
+        <div class="max-w-md w-full my-auto bg-white rounded-3xl shadow-2xl overflow-hidden border border-white/20">
+            <!-- Header Logo -->
+            <div class="bg-gradient-to-r from-brand-blue to-blue-900 p-8 text-center text-white relative">
+                <!-- Frame Logo Sekolah -->
+                <div class="w-20 h-20 bg-transparents rounded-3xl flex items-center justify-center mx-auto shadow-lg mb-4 transform hover:scale-105 transition duration-300 overflow-hidden p-2">
+                    <img src="Logo34.png" alt="SMPN 34 DEPOK" class="w-full h-full object-contain" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                </div>
+                <h1 class="text-2xl font-black tracking-tight">SARPRAS 34</h1>
+                <p class="text-xs text-blue-100 font-medium mt-1">PENGGUNAAN BARANG DAN RUANG</p>
+                <p class="text-xs text-blue-100 font-medium mt-1">SMPN 34 DEPOK</p>
+            </div>
+
+            <!-- Login Form Container -->
+            <div class="p-6 sm:p-8 pt-8 space-y-6">
+                <form id="main-login-form" onsubmit="handleLoginSubmit(event)" class="space-y-4">
+                    <!-- Error Alert -->
+                    <div id="login-error-alert" class="hidden p-3 bg-rose-50 border border-rose-200 text-rose-700 text-xs rounded-xl flex items-center space-x-2">
+                        <i class="fa-solid fa-circle-exclamation text-rose-500 text-sm"></i>
+                        <span id="login-error-msg">Nama Pengguna atau Kata Sandi salah!</span>
+                    </div>
+
+                    <!-- Username Input -->
+                    <div class="space-y-1">
+                        <label class="text-xs font-bold text-slate-700 propercase tracking-wide">Nama Pengguna</label>
+                        <div class="relative">
+                            <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center text-slate-400">
+                                <i class="fa-solid fa-user"></i>
+                            </span>
+                            <input type="text" id="login-username" required placeholder="Masukkan Nama Pengguna" class="w-full pl-10 pr-4 py-2.5 border border-slate-300 rounded-xl focus:ring-2 focus:ring-brand-blue focus:border-brand-blue outline-none text-sm font-medium">
+                        </div>
+                    </div>
+
+                    <!-- Password Input with Toggle Eye Icon -->
+                    <div class="space-y-1">
+                        <label class="text-xs font-bold text-slate-700 propercase tracking-wide">Kata Sandi</label>
+                        <div class="relative">
+                            <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center text-slate-400">
+                                <i class="fa-solid fa-lock"></i>
+                            </span>
+                            <input type="password" id="login-password" required placeholder="Masukkan Kata Sandi" class="w-full pl-10 pr-10 py-2.5 border border-slate-300 rounded-xl focus:ring-2 focus:ring-brand-blue focus:border-brand-blue outline-none text-sm font-medium">
+                            <button type="button" onclick="togglePasswordVisibility('login-password', 'toggle-password-icon')" aria-label="Tampilkan atau sembunyikan kata sandi" class="absolute inset-y-0 right-0 pr-3.5 flex items-center text-slate-400 hover:text-brand-blue transition focus:outline-none">
+                                <i id="toggle-password-icon" class="fa-solid fa-eye"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Submit Button -->
+                    <button type="submit" class="w-full py-3 bg-brand-orange hover:bg-brand-darkorange text-white font-bold text-sm rounded-xl shadow-lg hover:shadow-xl transition flex items-center justify-center space-x-2 mt-2">
+                        <i class="fa-solid fa-right-to-bracket"></i>
+                        <span>MASUK</span>
+                    </button>
+                </form>
+
+                <div class="text-center pt-2 border-t border-slate-100 text-xs text-slate-400">
+                    &copy; UPTD SMPN 34 DEPOK - Sarana & Prasarana Sekolah
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- App Wrapper Container (Hidden until user logs in) -->
+    <div id="app-main-wrapper" class="hidden min-h-screen flex-col md:flex-row w-full">
+        
+        <!-- SIDEBAR VERTIKAL SEBELAH KIRI -->
+        <aside class="w-full md:w-80 bg-brand-darkblue text-white flex-shrink-0 flex flex-col justify-between shadow-2xl z-30">
+            <div>
+                <!-- Header Branding -->
+                <div class="p-6 bg-blue-950/80 border-b border-blue-800/60 flex items-center space-x-3">
+                    <div class="w-12 h-12 bg-transparents text-brand-orange rounded-2xl flex items-center justify-center text-2xl shadow-md flex-shrink-0">
+                        <img src="Logo34.png" alt="SMPN 34 DEPOK" class="w-full h-full object-contain" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                    </div>
+                    <div>
+                        <div class="flex items-center space-x-2">
+                            <h1 class="font-black text-xl tracking-tight text-white">SARPRAS 34</h1>
+                            <span class="bg-brand-orange text-[10px] text-white font-bold px-2 py-0.5 rounded-full">1.0</span>
+                        </div>
+                        <p class="text-[11px] text-blue-200 font-medium">UPTD SMPN 34 DEPOK</p>
+                    </div>
+                </div>
+
+                <!-- User Profile Card -->
+                <div class="p-5 border-b border-blue-800/40 bg-blue-900/40">
+                    <div class="flex items-center space-x-3">
+                        <div id="user-avatar-initial" class="w-10 h-10 rounded-full bg-brand-orange text-white font-bold flex items-center justify-center text-sm shadow">
+                            U
+                        </div>
+                        <div class="overflow-hidden">
+                            <p id="user-display-name" class="font-bold text-sm truncate text-white">Nama Pengguna</p>
+                            <p id="dropdown-user-role" class="text-xs text-amber-300 font-semibold truncate">User</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Navigation Menu -->
+                <nav class="p-4 space-y-1 text-sm font-semibold">
+                    <div class="text-[17px] uppercase tracking-wider text-blue-300 px-3 py-2 font-bold">Menu</div>
+
+                    <button id="sidebar-nav-dashboard" onclick="switchTab('dashboard')" class="sidebar-active w-full px-4 py-3 rounded-xl flex items-center space-x-3 transition hover:bg-blue-800">
+                        <i class="fa-solid fa-table-columns w-5 text-center"></i>
+                        <span>Informasi</span>
+                    </button>
+
+                    <button id="sidebar-nav-booking" onclick="switchTab('booking')" class="w-full px-4 py-3 text-blue-100 rounded-xl flex items-center space-x-3 transition hover:bg-blue-800">
+                        <i class="fa-solid fa-file-pen w-5 text-center"></i>
+                        <span>Pengajuan Penggunaan</span>
+                    </button>
+
+                    <button id="sidebar-nav-catalog" onclick="switchTab('catalog')" class="w-full px-4 py-3 text-blue-100 rounded-xl flex items-center space-x-3 transition hover:bg-blue-800">
+                        <i class="fa-solid fa-boxes-stacked w-5 text-center"></i>
+                        <span>Daftar Fasilitas</span>
+                    </button>
+
+                    <button id="sidebar-nav-admin-panel" onclick="switchTab('admin-panel')" class="hidden w-full px-4 py-3 text-amber-300 rounded-xl flex items-center justify-between transition hover:bg-blue-800 font-bold border border-amber-400/20 bg-amber-500/10">
+                        <div class="flex items-center space-x-3">
+                            <i class="fa-solid fa-user-shield w-5 text-center"></i>
+                            <span>Administrator</span>
+                        </div>
+                        <span id="pending-count-badge" class="bg-brand-orange text-white text-[10px] px-2 py-0.5 rounded-full font-bold">0</span>
+                    </button>
+                </nav>
+            </div>
+
+            <!-- Sidebar Footer & Logout Button -->
+            <div class="p-4 border-t border-blue-800/60 bg-blue-950/60">
+                <button onclick="logout()" class="w-full py-2.5 px-4 bg-rose-600/90 hover:bg-rose-700 text-white rounded-xl text-xs font-bold transition flex items-center justify-center space-x-2 shadow">
+                    <i class="fa-solid fa-right-from-bracket"></i>
+                    <span>KELUAR</span>
+                </button>
+                <p class="text-[10px] text-center text-blue-300/60 mt-3">&copy; UPTD SMPN 34 DEPOK</p>
+            </div>
+        </aside>
+
+        <!-- AREA KONTEN UTAMA SEBELAH KANAN -->
+        <main class="flex-grow p-4 sm:p-6 lg:p-8 overflow-y-auto space-y-6">
+
+            <!-- ================= SECTION 1: DASHBOARD PAPAN INFORMASI TABEL ================= -->
+            <section id="section-dashboard" class="space-y-6">
+                <!-- Banner Header -->
+                <div class="bg-gradient-to-r from-brand-blue via-blue-800 to-indigo-900 rounded-3xl p-6 sm:p-8 text-white shadow-lg relative overflow-hidden">
+                    <div class="relative z-10 max-w-3xl">
+                        <div class="inline-flex items-center space-x-2 bg-white/10 backdrop-blur-md px-3 py-1 rounded-full text-xs font-semibold mb-3 border border-white/20">
+                            <i class="fa-solid fa-bullhorn text-brand-orange"></i>
+                            <span>Gunakan, Rapikan dan Kembalikan ke tempat semula. </span>
+                        </div>
+                        <h4 class="text-2xl sm:text-3xl font-black tracking-tight leading-tight">Informasi Penggunaan Fasilitas Sekolah</h4>
+                    </div>
+                </div>
+
+                <!-- Summary Statistics -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                    <div class="bg-white rounded-2xl p-4 border border-slate-200 shadow-sm flex items-center justify-between">
+                        <div>
+                            <p class="text-xs font-medium text-slate-500 uppercase">Total Penggunaan</p>
+                            <h3 class="text-2xl font-bold text-slate-800 mt-1" id="stat-total">0</h3>
+                        </div>
+                        <div class="w-10 h-10 rounded-xl bg-blue-50 text-brand-blue flex items-center justify-center text-lg">
+                            <i class="fa-solid fa-calendar-check"></i>
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-2xl p-4 border border-slate-200 shadow-sm flex items-center justify-between">
+                        <div>
+                            <p class="text-xs font-medium text-slate-500 uppercase">Sedang Berjalan</p>
+                            <h3 class="text-2xl font-bold text-amber-600 mt-1" id="stat-running">0</h3>
+                        </div>
+                        <div class="w-10 h-10 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center text-lg">
+                            <i class="fa-solid fa-spinner animate-spin"></i>
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-2xl p-4 border border-slate-200 shadow-sm flex items-center justify-between">
+                        <div>
+                            <p class="text-xs font-medium text-slate-500 uppercase">Akan Datang (Terdaftar)</p>
+                            <h3 class="text-2xl font-bold text-emerald-600 mt-1" id="stat-approved">0</h3>
+                        </div>
+                        <div class="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-lg">
+                            <i class="fa-solid fa-clock"></i>
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-2xl p-4 border border-slate-200 shadow-sm flex items-center justify-between">
+                        <div>
+                            <p class="text-xs font-medium text-slate-500 uppercase">Total Inventaris</p>
+                            <h3 class="text-2xl font-bold text-brand-orange mt-1" id="stat-inventory">0</h3>
+                        </div>
+                        <div class="w-10 h-10 rounded-xl bg-orange-50 text-brand-orange flex items-center justify-center text-lg">
+                            <i class="fa-solid fa-cubes"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- PAPAN INFORMASI BERBENTUK TABEL RINGKAS DENGAN STATUS REALTIME -->
+                <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+                    <div class="p-5 border-b border-slate-100 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 bg-slate-50/70">
+                        <div>
+                            <h3 class="text-lg font-bold text-slate-800 flex items-center space-x-2">
+                                <i class="fa-solid fa-table text-brand-orange"></i>
+                                <span>Jadwal Penggunaan Barang dan Ruang</span>
+                            </h3>
+                            <p class="text-xs text-slate-500">Status penggunaan menyesuaikan waktu jadwal secara realtime (Terdaftar/Berjalan/Selesai)</p>
+                        </div>
+                        <div class="flex flex-wrap items-center gap-2 w-full sm:w-auto">
+                            <input type="text" id="dashboard-search" oninput="renderDashboardSchedule()" placeholder="Cari peminjam, mapel, barang..." class="text-xs px-3 py-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-brand-blue outline-none w-full sm:w-56">
+                            <select id="dashboard-filter-type" onchange="renderDashboardSchedule()" class="text-xs px-3 py-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-brand-blue outline-none bg-white font-medium">
+                                <option value="all">Semua Kategori</option>
+                                <option value="Ruangan">Ruangan</option>
+                                <option value="Barang">Barang</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Main Table -->
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left text-sm text-slate-600">
+                            <thead class="bg-slate-100 text-slate-700 text-xs uppercase font-bold border-b border-slate-200">
+                                <tr>
+                                    <th class="py-3.5 px-5">Nama Pengguna</th>
+                                    <th class="py-3.5 px-5">Mata Pelajaran/Keperluan</th>
+                                    <th class="py-3.5 px-5">Barang/Ruang</th>
+                                    <th class="py-3.5 px-5">Waktu Penggunaan</th>
+                                    <th class="py-3.5 px-5">Status Penggunaan</th>
+                                    <th class="py-3.5 px-4 text-center">Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody id="dashboard-schedule-table-body" class="divide-y divide-slate-100 text-xs">
+                                <!-- Table rows generated dynamically -->
+                            </tbody>
+                        </table>
+                        <div id="schedule-empty-state" class="hidden py-12 text-center text-slate-400">
+                            <i class="fa-solid fa-calendar-xmark text-4xl mb-3 text-slate-300"></i>
+                            <p class="text-sm font-medium">Belum ada jadwal peminjaman yang terdaftar.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ================= SECTION 2: FORMULIR PENGAJUAN PENGGUNAAN ================= -->
+            <section id="section-booking" class="hidden max-w-4xl mx-auto">
+                <div class="bg-white rounded-3xl border border-slate-200 shadow-lg overflow-hidden">
+                    <div class="bg-gradient-to-r from-brand-blue to-blue-900 text-white p-6 sm:p-8">
+                        <div class="flex items-center space-x-4">
+                            <div class="w-12 h-12 rounded-2xl bg-brand-orange flex items-center justify-center text-white font-bold text-2xl shadow-md">
+                                <i class="fa-solid fa-file-pen"></i>
+                            </div>
+                            <div>
+                                <h3 class="text-xl font-bold">Formulir Pengajuan Penggunaan</h3>
+                            </div>
+                        </div>
+                    </div>
+
+                    <form id="booking-form" onsubmit="handleBookingSubmit(event)" class="p-6 sm:p-8 space-y-6">
+                        <!-- Conflict Alert Box -->
+                        <div id="conflict-alert" class="hidden p-4 bg-rose-50 border border-rose-200 rounded-2xl text-rose-800 text-sm flex items-start space-x-3">
+                            <i class="fa-solid fa-circle-xmark text-rose-600 text-xl mt-0.5"></i>
+                            <div>
+                                <span class="font-bold text-rose-700">Stok Barang/Ruangan belum tersedia untuk Jam Ini!</span>
+                                <p id="conflict-message" class="text-xs mt-0.5 text-rose-600 font-medium">Seluruh unit stok barang/ruangan yang Anda pilih sudah ter-booking penuh pada jam tersebut. Silakan pilih waktu lain.</p>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <!-- Nama Pengguna -->
+                            <div class="space-y-1">
+                                <label class="text-xs font-bold text-slate-700 propercase tracking-wide">Nama Pengguna <span class="text-red-500">*</span></label>
+                                <div class="relative">
+                                    <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center text-slate-400">
+                                        <i class="fa-solid fa-user"></i>
+                                    </span>
+                                    <input type="text" id="form-borrower-name" required placeholder="Contoh: Tulus Ariyanto, S.Pd., Gr." class="w-full pl-10 pr-4 py-2.5 border border-slate-300 rounded-xl focus:ring-2 focus:ring-brand-blue focus:border-brand-blue outline-none text-sm font-medium">
+                                </div>
+                            </div>
+
+                            <!-- Mata Pelajaran / Keperluan -->
+                            <div class="space-y-1">
+                                <label class="text-xs font-bold text-slate-700 propercase tracking-wide">Mata Pelajaran/Keperluan <span class="text-red-500">*</span></label>
+                                <div class="relative">
+                                    <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center text-slate-400">
+                                        <i class="fa-solid fa-book-open"></i>
+                                    </span>
+                                    <input type="text" id="form-subject" required placeholder="Contoh: Bahasa Indonesia/Pembelajaran Kelas 9.1" class="w-full pl-10 pr-4 py-2.5 border border-slate-300 rounded-xl focus:ring-2 focus:ring-brand-blue focus:border-brand-blue outline-none text-sm font-medium">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Jenis Penggunaan (DROPDOWN SELECTOR) -->
+                        <div class="space-y-1">
+                            <label class="text-xs font-bold text-slate-700 propercase tracking-wide">Jenis Fasilitas <span class="text-red-500">*</span></label>
+                            <div class="relative">
+                                <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center text-slate-400 pointer-events-none">
+                                    <i class="fa-solid fa-layer-group"></i>
+                                </span>
+                                <select id="form-facility-type-dropdown" onchange="onTypeDropdownChange(this.value)" required class="w-full pl-10 pr-4 py-2.5 border border-slate-300 rounded-xl focus:ring-2 focus:ring-brand-blue focus:border-brand-blue outline-none text-sm font-semibold bg-white text-slate-800">
+                                    <option value="Ruangan">🏫 Ruang</option>
+                                    <option value="Barang">📦 Barang/Peralatan</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Target Selection -->
+                        <div class="space-y-1">
+                            <label class="text-xs font-bold text-slate-700 propercase tracking-wide" id="form-target-label">Pilih Ruangan <span class="text-red-500">*</span></label>
+                            <select id="form-target-item" onchange="onTargetItemChange()" required class="w-full px-4 py-2.5 border border-slate-300 rounded-xl focus:ring-2 focus:ring-brand-blue focus:border-brand-blue outline-none text-sm font-medium bg-white">
+                                <!-- Dynamic options -->
+                            </select>
+                        </div>
+
+                        <!-- Goods Equipment Checkboxes -->
+                        <div id="goods-equipment-section" class="hidden p-4 bg-orange-50/60 border border-orange-200 rounded-2xl space-y-3">
+                            <label class="text-xs font-bold text-brand-darkorange uppercase tracking-wide flex items-center space-x-2">
+                                <i class="fa-solid fa-list-check"></i>
+                                <span>Rincian Kelengkapan</span>
+                            </label>
+                            <p class="text-xs text-slate-600">Pilih kelengkapan barang yang digunakan:</p>
+                            <div id="equipment-checkboxes" class="grid grid-cols-2 sm:grid-cols-3 gap-2 pt-1">
+                                <!-- Dynamic checkboxes -->
+                            </div>
+                            <div>
+                                <input type="text" id="form-custom-equipment" placeholder="Catatan kelengkapan tambahan (opsional)..." class="w-full px-3 py-2 text-xs border border-orange-300 rounded-xl outline-none focus:ring-1 focus:ring-brand-orange bg-white">
+                            </div>
+                        </div>
+
+                        <!-- Date & Time Row -->
+                        <div class="border-t border-slate-200 pt-5 space-y-4">
+                            <h4 class="text-sm font-bold text-slate-800 flex items-center space-x-2">
+                                <i class="fa-solid fa-clock text-brand-blue"></i>
+                                <span>Waktu & Tanggal Penggunaan</span>
+                            </h4>
+
+                            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                                <!-- Tanggal -->
+                                <div class="space-y-1">
+                                    <label class="text-xs font-semibold text-slate-600">Tanggal Penggunaan <span class="text-red-500">*</span></label>
+                                    <input type="date" id="form-date" required onchange="checkTimeConflict()" class="w-full px-3 py-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-brand-blue text-sm outline-none bg-white font-medium">
+                                </div>
+                                <!-- Jam Mulai -->
+                                <div class="space-y-1">
+                                    <label class="text-xs font-semibold text-slate-600">Jam Mulai <span class="text-red-500">*</span></label>
+                                    <input type="time" id="form-start-time" required onchange="checkTimeConflict()" class="w-full px-3 py-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-brand-blue text-sm outline-none bg-white font-medium">
+                                </div>
+                                <!-- Jam Selesai -->
+                                <div class="space-y-1">
+                                    <label class="text-xs font-semibold text-slate-600">Jam Selesai <span class="text-red-500">*</span></label>
+                                    <input type="time" id="form-end-time" required onchange="checkTimeConflict()" class="w-full px-3 py-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-brand-blue text-sm outline-none bg-white font-medium">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Catatan Tambahan -->
+                        <div class="space-y-1">
+                            <label class="text-xs font-semibold text-slate-600">Catatan Tambahan</label>
+                            <textarea id="form-notes" rows="2" placeholder="Opsional..." class="w-full px-3 py-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-brand-blue text-sm outline-none"></textarea>
+                        </div>
+
+                        <!-- Form Actions -->
+                        <div class="flex justify-end space-x-3 border-t border-slate-200 pt-5">
+                            <button type="button" onclick="resetForm()" class="px-5 py-2.5 border border-slate-300 hover:bg-slate-100 rounded-xl text-slate-600 font-semibold text-sm transition">
+                                Reset
+                            </button>
+                            <button type="submit" id="btn-submit-booking" class="px-6 py-2.5 bg-brand-orange hover:bg-brand-darkorange text-white font-bold text-sm rounded-xl shadow-md transition flex items-center space-x-2">
+                                <i class="fa-paper-plane fa-solid"></i>
+                                <span>Kirim Permohonan</span>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </section>
+
+            <!-- ================= SECTION 3: DAFTAR FASILITAS ================= -->
+            <section id="section-catalog" class="hidden space-y-6">
+                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
+                    <div>
+                        <h3 class="text-lg font-bold text-slate-800">SARANA DAN PRASARANA SMPN 34 DEPOK</h3>
+                        <p class="text-xs text-slate-500">Daftar inventaris fasilitas yang siap digunakan untuk kegiatan sekolah.</p>
+                    </div>
+                    <!-- Filter Buttons -->
+                    <div class="flex items-center space-x-2 bg-slate-100 p-1.5 rounded-xl text-xs font-semibold">
+                        <button onclick="filterCatalog('all')" id="cat-filter-all" class="px-3 py-1.5 rounded-lg bg-white shadow-xs text-brand-blue font-bold">Semua</button>
+                        <button onclick="filterCatalog('Ruangan')" id="cat-filter-ruang" class="px-3 py-1.5 rounded-lg text-slate-600 hover:text-slate-900">Ruangan</button>
+                        <button onclick="filterCatalog('Barang')" id="cat-filter-barang" class="px-3 py-1.5 rounded-lg text-slate-600 hover:text-slate-900">Barang</button>
+                    </div>
+                </div>
+
+                <div id="catalog-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <!-- Dynamic catalog cards -->
+                </div>
+            </section>
+
+            <!-- ================= SECTION 4: PANEL ADMINISTRATOR ================= -->
+            <section id="section-admin-panel" class="hidden space-y-6">
+                <div class="bg-gradient-to-r from-slate-900 via-brand-blue to-blue-900 text-white rounded-3xl p-6 sm:p-8 shadow-xl flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                    <div>
+                        <div class="flex items-center space-x-2 mb-1">
+                            <h3 class="text-xl font-black">Menu Administrator</h3>
+                        </div>
+                        <p class="text-xs text-blue-100">Pengelolaan permohonan, inventaris, akun, dan rekapitulasi data penggunaan barang & ruang.</p>
+                    </div>
+                    
+                    <!-- Spreadsheet Download & Actions -->
+                    <div class="flex flex-wrap items-center gap-2">
+                    </div>
+                </div>
+
+                <!-- Admin Nav Selector (MENU DROPDOWN PANEL ADMIN) -->
+                <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-4 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
+                    <div class="flex items-center space-x-2">
+                        <i class="fa-solid fa-sliders text-brand-orange text-lg"></i>
+                        <label for="admin-menu-dropdown" class="font-bold text-slate-800 text-sm">Pengelolaan Admin:</label>
+                    </div>
+                    <div class="w-full sm:w-72">
+                        <select id="admin-menu-dropdown" onchange="onAdminSubTabChange(this.value)" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-300 rounded-xl focus:ring-2 focus:ring-brand-blue outline-none text-xs font-bold text-slate-700">
+                            <option value="requests">📋 Laporan</option>
+                            <option value="inventory">📦 Inventaris</option>
+                            <option value="users">👥 Akun</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Admin Subtab 1: Laporan Penggunaan -->
+                <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+                    <!-- Admin Subtab 1: Requests Table -->
+                    <div id="admin-view-requests" class="p-6 space-y-4">
+                        <!-- Filter bar for Admin -->
+                        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 bg-slate-50 p-3 rounded-xl border border-slate-200 text-xs">
+                            <div class="flex items-center space-x-2 w-full sm:w-auto">
+                                <span class="font-bold text-slate-600">Filter Status:</span>
+                                <select id="admin-filter-status" onchange="renderAdminRequests()" class="px-2.5 py-1.5 border border-slate-300 rounded-lg outline-none bg-white font-medium">
+                                    <option value="all">Semua Status</option>
+                                    <option value="Terdaftar">Terdaftar (Otomatis)</option>
+                                    <option value="Selesai">Selesai (Dikembalikan)</option>
+                                    <option value="Dibatalkan">Dibatalkan</option>
+                                </select>
+                            </div>
+
+                            <div class="flex items-center space-x-2">
+                                <span class="font-bold text-slate-600">Rentang Tanggal:</span>
+                                <input type="date" id="admin-filter-date-start" onchange="renderAdminRequests()" class="px-2 py-1 border border-slate-300 rounded-lg outline-none bg-white">
+                                <span>s/d</span>
+                                <input type="date" id="admin-filter-date-end" onchange="renderAdminRequests()" class="px-2 py-1 border border-slate-300 rounded-lg outline-none bg-white">
+                            </div>
+                        </div>
+                        <div class="overflow-x-auto border border-slate-200 rounded-xl">
+                            <table class="w-full text-left text-sm text-slate-600">
+                                <thead class="bg-slate-100 text-slate-700 text-xs uppercase font-bold border-b border-slate-200">
+                                    <tr>
+                                        <th class="py-3 px-4">Kode ID</th>
+                                        <th class="py-3 px-4">Pengguna</th>
+                                        <th class="py-3 px-4">Mata Pelajaran</th>
+                                        <th class="py-3 px-4">Barang/Ruang</th>
+                                        <th class="py-3 px-4">Kelengkapan</th>
+                                        <th class="py-3 px-4">Jadwal Penggunaan</th>
+                                        <th class="py-3 px-4">Status</th>
+                                        <th class="py-3 px-4 text-center">Aksi</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="admin-requests-table-body" class="divide-y divide-slate-100">
+                                    <!-- Dynamic rows -->
+                                </tbody>
+                            </table>
+                        </div>
+                        <button onclick="exportToExcel()" class="bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold px-4 py-2.5 rounded-xl shadow transition flex items-center space-x-2">
+                            <i class="fa-solid fa-file-excel text-base"></i>
+                            <span>Unduh Laporan (.xlsx)</span>
+                        </button>
+                    </div>
+
+                    <!-- Admin Subtab 2: Inventaris -->
+                    <div id="admin-view-inventory" class="hidden p-6 space-y-4">
+                        <div class="flex justify-between items-center">
+                            <h4 class="font-bold text-slate-800 text-sm">Daftar Barang dan Ruangan</h4>
+                            <span class="text-xs text-slate-500">Total: <span id="admin-inv-count" class="font-bold text-brand-blue">0</span> item</span>
+                        </div>
+                        <button onclick="openInventoryModal()" class="bg-brand-orange hover:bg-brand-darkorange text-white text-xs font-bold px-4 py-2.5 rounded-xl shadow transition flex items-center space-x-2">
+                            <i class="fa-solid fa-plus"></i>
+                            <span>Tambah Inventaris</span>
+                        </button>
+
+                        <div class="overflow-x-auto border border-slate-200 rounded-xl">
+                            <table class="w-full text-left text-sm text-slate-600">
+                                <thead class="bg-slate-100 text-slate-700 text-xs uppercase font-bold border-b border-slate-200">
+                                    <tr>
+                                        <th class="py-3 px-4">Kode ID</th>
+                                        <th class="py-3 px-4">Kategori</th>
+                                        <th class="py-3 px-4">Nama Barang/Ruang</th>
+                                        <th class="py-3 px-4">Stok</th>
+                                        <th class="py-3 px-4">Lokasi</th>
+                                        <th class="py-3 px-4">Kelengkapan</th>
+                                        <th class="py-3 px-4">Status</th>
+                                        <th class="py-3 px-4 text-center">Aksi</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="admin-inventory-table-body" class="divide-y divide-slate-100">
+                                    <!-- Dynamic rows -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Admin Subtab 3: Pengelolaan Akun -->
+                    <div id="admin-view-users" class="hidden p-6 space-y-4">
+                        <div class="flex justify-between items-center">
+                            <div>
+                                <h4 class="font-bold text-slate-800 text-sm">Daftar Pengguna</h4>
+                            </div>
+                            <button onclick="openUserModal()" class="px-4 py-2.5 bg-brand-orange hover:bg-brand-darkorange text-white rounded-xl font-bold text-xs transition flex items-center space-x-1">
+                                <i class="fa-solid fa-plus"></i>
+                                <span>Pengguna Baru</span>
+                            </button>
+                        </div>
+
+                        <div class="overflow-x-auto border border-slate-200 rounded-xl">
+                            <table class="w-full text-left text-sm text-slate-600">
+                                <thead class="bg-slate-100 text-slate-700 text-xs uppercase font-bold border-b border-slate-200">
+                                    <tr>
+                                        <th class="py-3 px-4">Nama Pengguna</th>
+                                        <th class="py-3 px-4">Nama Lengkap</th>
+                                        <th class="py-3 px-4">Role</th>
+                                        <th class="py-3 px-4">Kata Sandi</th>
+                                        <th class="py-3 px-4 text-center">AKSI</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="admin-users-table-body" class="divide-y divide-slate-100">
+                                    <!-- Dynamic rows -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+    </div> <!-- End of #app-main-wrapper -->
+
+    <!-- Edit Permohonan Peminjaman (ADMIN) -->
+    <div id="modal-edit-booking" class="hidden fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto">
+        <div class="bg-white rounded-3xl max-w-lg w-full p-6 sm:p-8 shadow-2xl relative border border-slate-100">
+            <button onclick="closeModal('modal-edit-booking')" class="absolute top-5 right-5 text-slate-400 hover:text-slate-600 text-lg">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+            <h3 class="text-lg font-bold text-slate-800 mb-1">Ubah Data Pengajuan Penggunaan</h3>
+
+            <form id="edit-booking-form" onsubmit="handleEditBookingSubmit(event)" class="space-y-4">
+                <input type="hidden" id="edit-booking-id" value="">
+                
+                <div class="space-y-1">
+                    <label class="text-xs font-bold text-slate-700 propercase">Nama Pengguna <span class="text-red-500">*</span></label>
+                    <input type="text" id="edit-borrower-name" required class="w-full px-3 py-2 border border-slate-300 rounded-xl outline-none text-sm font-medium">
+                </div>
+
+                <div class="space-y-1">
+                    <label class="text-xs font-bold text-slate-700 propercase">Mata Pelajaran/Keperluan <span class="text-red-500">*</span></label>
+                    <input type="text" id="edit-subject" required class="w-full px-3 py-2 border border-slate-300 rounded-xl outline-none text-sm font-medium">
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div class="space-y-1">
+                        <label class="text-xs font-bold text-slate-700 propercase">Jenis Fasilitas</label>
+                        <select id="edit-facility-type" onchange="onEditFacilityTypeChange(this.value)" required class="w-full px-3 py-2 border border-slate-300 rounded-xl outline-none text-sm font-medium">
+                            <option value="Ruangan">Ruang</option>
+                            <option value="Barang">Barang/Peralatan</option>
+                        </select>
+                    </div>
+                    <div class="space-y-1">
+                        <label class="text-xs font-bold text-slate-700 propercase">Pilih Fasilitas</label>
+                        <select id="edit-target-item" required class="w-full px-3 py-2 border border-slate-300 rounded-xl outline-none text-sm font-medium">
+                            <!-- Options generated dynamically -->
+                        </select>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                    <div class="space-y-1">
+                        <label class="text-xs font-bold text-slate-700 propercase">Tanggal</label>
+                        <input type="date" id="edit-date" required class="w-full px-3 py-2 border border-slate-300 rounded-xl outline-none text-xs font-medium">
+                    </div>
+                    <div class="space-y-1">
+                        <label class="text-xs font-bold text-slate-700 propercase">Jam Mulai</label>
+                        <input type="time" id="edit-start-time" required class="w-full px-3 py-2 border border-slate-300 rounded-xl outline-none text-xs font-medium">
+                    </div>
+                    <div class="space-y-1">
+                        <label class="text-xs font-bold text-slate-700 propercase">Jam Selesai</label>
+                        <input type="time" id="edit-end-time" required class="w-full px-3 py-2 border border-slate-300 rounded-xl outline-none text-xs font-medium">
+                    </div>
+                </div>
+
+                <div class="space-y-1">
+                    <label class="text-xs font-bold text-slate-700 propercase">Catatan/Keterangan</label>
+                    <textarea id="edit-notes" rows="2" class="w-full px-3 py-2 border border-slate-300 rounded-xl outline-none text-xs"></textarea>
+                </div>
+
+                <div class="pt-4 flex justify-end space-x-2">
+                    <button type="button" onclick="closeModal('modal-edit-booking')" class="px-4 py-2 text-xs font-bold text-slate-600 bg-slate-100 hover:bg-slate-200 rounded-xl">Batal</button>
+                    <button type="submit" class="px-5 py-2 text-xs font-bold text-white bg-brand-blue hover:bg-blue-900 rounded-xl shadow">Simpan Perubahan</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal Custom Confirm Delete -->
+    <div id="modal-confirm" class="hidden fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl max-w-sm w-full p-6 shadow-2xl text-center space-y-4 border border-slate-100">
+            <div class="w-12 h-12 bg-rose-100 text-rose-600 rounded-full flex items-center justify-center text-xl mx-auto">
+                <i class="fa-solid fa-triangle-exclamation"></i>
+            </div>
+            <h3 class="text-base font-bold text-slate-800" id="confirm-title">Konfirmasi Hapus</h3>
+            <p class="text-xs text-slate-500 font-medium" id="confirm-message">Apakah Anda yakin ingin menghapus data ini?</p>
+            <div class="flex justify-center space-x-2 pt-2">
+                <button type="button" onclick="closeModal('modal-confirm')" class="w-1/2 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs rounded-xl transition">Batal</button>
+                <button type="button" id="confirm-btn-yes" class="w-1/2 py-2.5 bg-rose-600 hover:bg-rose-700 text-white font-bold text-xs rounded-xl transition shadow">Ya, Hapus</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Add / Edit User Account -->
+    <div id="modal-user" class="hidden fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto">
+        <div class="bg-white rounded-3xl max-w-lg w-full p-6 sm:p-8 shadow-2xl relative border border-slate-100">
+            <button onclick="closeModal('modal-user')" class="absolute top-5 right-5 text-slate-400 hover:text-slate-600 text-lg">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+            <h3 class="text-lg font-bold text-slate-800 mb-1" id="modal-user-title">Tambah Pengguna Baru</h3>
+
+            <form id="user-form" onsubmit="handleUserSubmit(event)" class="space-y-4">
+                <input type="hidden" id="user-old-username" value="">
+                
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div class="space-y-1">
+                        <label class="text-xs font-bold text-slate-700 propercase">Nama Pengguna <span class="text-red-500">*</span></label>
+                        <input type="text" id="user-username" required placeholder="Contoh: user" class="w-full px-3 py-2 border border-slate-300 rounded-xl outline-none text-sm font-medium">
+                    </div>
+                    <div class="space-y-1">
+                        <label class="text-xs font-bold text-slate-700 Propercase">Role<span class="text-red-500">*</span></label>
+                        <select id="user-role" required class="w-full px-3 py-2 border border-slate-300 rounded-xl outline-none text-sm font-medium">
+                            <option value="user">User</option>
+                            <option value="admin">Administrator</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="space-y-1">
+                    <label class="text-xs font-bold text-slate-700 prpercase">Kata Sandi <span class="text-red-500">*</span></label>
+                    <div class="relative">
+                        <input type="password" id="user-password" required placeholder="Masukkan Kata Sandi" class="w-full pl-3 pr-10 py-2 border border-slate-300 rounded-xl outline-none text-sm font-medium">
+                        <button type="button" onclick="togglePasswordVisibility('user-password', 'toggle-user-password-icon')" aria-label="Tampilkan atau sembunyikan kata sandi" class="absolute inset-y-0 right-0 pr-3.5 flex items-center text-slate-400 hover:text-brand-blue transition focus:outline-none">
+                            <i id="toggle-user-password-icon" class="fa-solid fa-eye"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="space-y-1">
+                    <label class="text-xs font-bold text-slate-700 propercase">Nama Lengkap<span class="text-red-500">*</span></label>
+                    <input type="text" id="user-name" required placeholder="Contoh: Tulus Ariyanto,S.Pd., Gr." class="w-full px-3 py-2 border border-slate-300 rounded-xl outline-none text-sm font-medium">
+                </div>
+                <div class="pt-4 flex justify-end space-x-2">
+                    <button type="button" onclick="closeModal('modal-user')" class="px-4 py-2 text-xs font-bold text-slate-600 bg-slate-100 hover:bg-slate-200 rounded-xl">Batal</button>
+                    <button type="submit" class="px-5 py-2 text-xs font-bold text-white bg-brand-orange hover:bg-brand-darkorange rounded-xl shadow">Simpan Akun</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal Add / Edit Inventory -->
+    <div id="modal-inventory" class="hidden fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto">
+        <div class="bg-white rounded-3xl max-w-lg w-full p-6 sm:p-8 shadow-2xl relative border border-slate-100">
+            <button onclick="closeModal('modal-inventory')" class="absolute top-5 right-5 text-slate-400 hover:text-slate-600 text-lg">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+            <h3 class="text-lg font-bold text-slate-800 mb-1" id="modal-inventory-title">Tambah Inventaris Baru</h3>
+
+            <form id="inventory-form" onsubmit="handleInventorySubmit(event)" class="space-y-4">
+                <input type="hidden" id="inv-edit-id" value="">
+                
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div class="space-y-1">
+                        <label class="text-xs font-bold text-slate-700 propercase">Jenis Fasilitas <span class="text-red-500">*</span></label>
+                        <select id="inv-category" required class="w-full px-3 py-2 border border-slate-300 rounded-xl outline-none text-sm font-medium">
+                            <option value="Ruangan">Ruangan</option>
+                            <option value="Barang">Barang/Peralatan</option>
+                        </select>
+                    </div>
+                    <div class="space-y-1">
+                        <label class="text-xs font-bold text-slate-700 propercase">Stok<span class="text-red-500">*</span></label>
+                        <input type="number" id="inv-stock" required min="1" value="1" placeholder="Contoh: 10" class="w-full px-3 py-2 border border-slate-300 rounded-xl outline-none text-sm font-medium">
+                    </div>
+                </div>
+
+                <div class="space-y-1">
+                    <label class="text-xs font-bold text-slate-700 propercase">Nama Barang/Ruang<span class="text-red-500">*</span></label>
+                    <input type="text" id="inv-name" required placeholder="Contoh: Proyektor/Aula" class="w-full px-3 py-2 border border-slate-300 rounded-xl outline-none text-sm font-medium">
+                </div>
+                <div class="space-y-1">
+                    <label class="text-xs font-bold text-slate-700 propercase">Lokasi Ruang/Penyimpanan <span class="text-red-500">*</span></label>
+                    <input type="text" id="inv-location" required placeholder="Contoh: Lantai 1/Lemari Sarpras" class="w-full px-3 py-2 border border-slate-300 rounded-xl outline-none text-sm font-medium">
+                </div>
+                <div class="space-y-1">
+                    <label class="text-xs font-bold text-slate-700 propercase">Kelengkapan</label>
+                    <input type="text" id="inv-equipments" placeholder="Contoh: Kabel Power, Kabel HDMI (pisahkan dengan koma)" class="w-full px-3 py-2 border border-slate-300 rounded-xl outline-none text-sm">
+                </div>
+                <div class="pt-4 flex justify-end space-x-2">
+                    <button type="button" onclick="closeModal('modal-inventory')" class="px-4 py-2 text-xs font-bold text-slate-600 bg-slate-100 hover:bg-slate-200 rounded-xl">Batal</button>
+                    <button type="submit" class="px-5 py-2 text-xs font-bold text-white bg-brand-orange hover:bg-brand-darkorange rounded-xl shadow">Simpan Data</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal Digital Printable Receipt -->
+    <div id="modal-receipt" class="hidden fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto">
+        <div class="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl relative border border-slate-100">
+            <button onclick="closeModal('modal-receipt')" class="absolute top-5 right-5 text-slate-400 hover:text-slate-600 text-lg">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+
+            <!-- Printable content area -->
+            <div id="printable-receipt" class="space-y-4">
+                <div class="text-center border-b border-slate-200 pb-4">
+                    <div class="w-12 h-12 bg-brand-blue text-white rounded-2xl flex items-center justify-center text-xl mx-auto mb-2">
+                        <i class="fa-solid fa-school"></i>
+                    </div>
+                    <h4 class="font-black text-slate-800 text-lg">UPTD SMPN 34 DEPOK</h4>
+                    <p class="text-[11px] text-slate-500 font-medium">BUKTI PENGAJUAN PENGGUNAAN</p>
+                    <div id="rec-status-badge" class="mt-2 inline-block px-3 py-1 text-xs font-bold rounded-full bg-emerald-100 text-emerald-700">
+                        TERDAFTAR
+                    </div>
+                </div>
+
+                <div class="text-xs space-y-2 text-slate-700 font-medium">
+                    <div class="flex justify-between border-b border-slate-100 pb-1">
+                        <span class="text-slate-400">Kode Bukti:</span>
+                        <span id="rec-id" class="font-mono font-bold text-slate-800">REQ-1001</span>
+                    </div>
+                    <div class="flex justify-between border-b border-slate-100 pb-1">
+                        <span class="text-slate-400">Nama Pengguna:</span>
+                        <span id="rec-name" class="font-bold">Budi Santoso</span>
+                    </div>
+                    <div class="flex justify-between border-b border-slate-100 pb-1">
+                        <span class="text-slate-400">Mapel/Keperluan:</span>
+                        <span id="rec-subject">Informatika</span>
+                    </div>
+                    <div class="flex justify-between border-b border-slate-100 pb-1">
+                        <span class="text-slate-400">Barang/Ruangan:</span>
+                        <span id="rec-target" class="font-bold text-brand-blue">Lab Komputer 01</span>
+                    </div>
+                    <div class="flex justify-between border-b border-slate-100 pb-1">
+                        <span class="text-slate-400">Tanggal:</span>
+                        <span id="rec-date">Senin, 15 Okt 2026</span>
+                    </div>
+                    <div class="flex justify-between border-b border-slate-100 pb-1">
+                        <span class="text-slate-400">Waktu Jam:</span>
+                        <span id="rec-time" class="font-bold text-brand-orange">08:00 - 10:00 WIB</span>
+                    </div>
+                    <div class="pt-1">
+                        <span class="text-slate-400 block mb-1">Rincian Kelengkapan:</span>
+                        <p id="rec-equipments" class="bg-slate-50 p-2.5 rounded-xl border border-slate-200 text-[11px] text-slate-600 font-normal">Kabel HDMI, Power</p>
+                    </div>
+                </div>
+
+                <div class="pt-4 border-t border-slate-200 text-center text-[10px] text-slate-400">
+                    *Simpan sebagai bukti pengajuan penggunaan fasilitas.
+                </div>
+            </div>
+
+            <div class="mt-6 flex justify-end space-x-2">
+                <button onclick="window.print()" class="w-full py-2.5 bg-brand-blue hover:bg-blue-900 text-white font-bold text-xs rounded-xl shadow transition flex items-center justify-center space-x-2">
+                    <i class="fa-solid fa-print"></i>
+                    <span>Cetak Bukti Penggunaan</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification Overlay -->
+    <div id="toast" class="fixed bottom-5 right-5 z-50 transform translate-y-20 opacity-0 transition-all duration-300 pointer-events-none">
+        <div class="bg-slate-900 text-white px-5 py-3 rounded-2xl shadow-2xl border border-slate-800 flex items-center space-x-3">
+            <i class="fa-solid fa-circle-check text-emerald-400 text-lg"></i>
+            <span id="toast-message" class="text-xs font-semibold">Notifikasi aplikasi</span>
+        </div>
+    </div>
+
+    <!-- Application Core JavaScript Logic -->
+    <script>
+        /* Registered Accounts Baseline */
+        const DEFAULT_ACCOUNTS = [
+            {
+                username: 'admin',
+                password: 'admin123',
+                name: 'Pak Hendra, S.Pd.',
+                role: 'admin',
+                nip: '19850315 201001 1 002'
+            },
+            {
+                username: 'user',
+                password: 'user123',
+                name: 'Budi Santoso, S.Pd. (Guru IPA)',
+                role: 'user',
+                nip: '19900412 201502 1 003'
+            },
+            {
+                username: 'guru',
+                password: 'guru123',
+                name: 'Dra. Endang Rahayu (Guru Informatika)',
+                role: 'user',
+                nip: '19780820 200501 2 004'
+            }
+        ];
+
+        function getTodayDateStr(offsetDays = 0) {
+            const d = new Date();
+            d.setDate(d.getDate() + offsetDays);
+            return d.toISOString().split('T')[0];
+        }
+
+        const APP_STATE = {
+            currentUser: null,
+            currentRole: 'user',
+            activeTab: 'dashboard',
+            adminSubTab: 'requests',
+            accounts: [...DEFAULT_ACCOUNTS],
+            inventory: [
+                { id: 'INV-01', type: 'Ruangan', name: 'Lab Komputer 01', stock: 1, location: 'Gedung Utama Lt. 2', defaultEquipments: ['PC Client 36 Unit', 'AC 2 Unit', 'Proyektor & Layar', 'Sound Room'] },
+                { id: 'INV-02', type: 'Ruangan', name: 'Lab IPA', stock: 1, location: 'Gedung Sayap Barat', defaultEquipments: ['Meja Praktikum', 'Mikroskop', 'Wastafel', 'Papan Tulis'] },
+                { id: 'INV-03', type: 'Ruangan', name: 'Aula Serbaguna UPTD SMPN 34', stock: 1, location: 'Lantai 3', defaultEquipments: ['Podium Utama', 'Sound System Central', 'AC Central', 'Kursi 200 Unit'] },
+                { id: 'INV-04', type: 'Ruangan', name: 'Lapangan Olahraga Utama', stock: 1, location: 'Area Terbuka Sekolah', defaultEquipments: ['Ring Basket', 'Net Voli', 'Tiang Bendera'] },
+                { id: 'INV-05', type: 'Barang', name: 'LCD Projector Portable EPSON 01', stock: 5, location: 'Ruang Sarpras', defaultEquipments: ['Kabel Power', 'Kabel HDMI 5m', 'Kabel VGA', 'Remote', 'Tas Protektor'] },
+                { id: 'INV-06', type: 'Barang', name: 'Sound System Wireless Portable', stock: 3, location: 'Ruang Sarpras', defaultEquipments: ['2 Mic Wireless', 'Kabel Power', 'Baterai Cas', 'Stand Speaker'] },
+                { id: 'INV-07', type: 'Barang', name: 'Laptop Unit Operasional 01', stock: 10, location: 'Lab Komputer', defaultEquipments: ['Charger Laptop', 'Mouse Wireless', 'Tas Laptop'] },
+                { id: 'INV-08', type: 'Barang', name: 'Paket Alat Olahraga (Bola & Net)', stock: 4, location: 'Gudang Olahraga', defaultEquipments: ['5 Bola Voli', '5 Bola Basket', 'Pompa Bola'] }
+            ],
+            bookings: [
+                {
+                    id: 'REQ-1001',
+                    borrowerName: 'Dra. Endang Rahayu',
+                    subject: 'Informatika - Praktek Coding',
+                    facilityType: 'Ruangan',
+                    targetItem: 'Lab Komputer 01',
+                    date: getTodayDateStr(0),
+                    startTime: '07:00',
+                    endTime: '23:59',
+                    equipments: ['PC Client 36 Unit', 'Proyektor & Layar'],
+                    notes: 'Membutuhkan koneksi internet aktif.',
+                    status: 'Terdaftar',
+                    createdAt: new Date().toISOString()
+                },
+                {
+                    id: 'REQ-1002',
+                    borrowerName: 'Ahmad Fauzi, S.Pd.',
+                    subject: 'IPA Fisika - Gelombang',
+                    facilityType: 'Barang',
+                    targetItem: 'LCD Projector Portable EPSON 01',
+                    date: getTodayDateStr(0),
+                    startTime: '00:00',
+                    endTime: '06:00',
+                    equipments: ['Kabel Power', 'Kabel HDMI 5m', 'Tas Protektor'],
+                    notes: 'Untuk presentasi materi di kelas 8B.',
+                    status: 'Terdaftar',
+                    createdAt: new Date().toISOString()
+                },
+                {
+                    id: 'REQ-1003',
+                    borrowerName: 'Siti Aminah, S.Pd.',
+                    subject: 'Seni Budaya - Pentas Seni',
+                    facilityType: 'Ruangan',
+                    targetItem: 'Aula Serbaguna UPTD SMPN 34',
+                    date: getTodayDateStr(1),
+                    startTime: '09:00',
+                    endTime: '13:00',
+                    equipments: ['Podium Utama', 'Sound System Central'],
+                    notes: 'Latihan gladi bersih siswa.',
+                    status: 'Terdaftar',
+                    createdAt: new Date().toISOString()
+                }
+            ]
+        };
+
+        let pendingConfirmAction = null;
+
+        window.addEventListener('DOMContentLoaded', () => {
+            loadFromLocalStorage();
+            showLoginScreen();
+            
+            setInterval(() => {
+                if (APP_STATE.currentUser) {
+                    renderDashboardSchedule();
+                    updateStats();
+                }
+            }, 30000);
+        });
+
+        /* Helper Modal Konfirmasi Hapus Kustom */
+        function showConfirmModal(title, message, onConfirm) {
+            const modal = document.getElementById('modal-confirm');
+            const titleEl = document.getElementById('confirm-title');
+            const msgEl = document.getElementById('confirm-message');
+            const yesBtn = document.getElementById('confirm-btn-yes');
+
+            if (titleEl) titleEl.innerText = title;
+            if (msgEl) msgEl.innerText = message;
+
+            pendingConfirmAction = onConfirm;
+
+            if (yesBtn) {
+                yesBtn.onclick = function() {
+                    if (pendingConfirmAction) pendingConfirmAction();
+                    closeModal('modal-confirm');
+                };
+            }
+
+            if (modal) modal.classList.remove('hidden');
+        }
+
+        /* Dynamic Password Toggle Function */
+        function togglePasswordVisibility(inputId = 'login-password', iconId = 'toggle-password-icon') {
+            const passwordInput = document.getElementById(inputId);
+            const icon = document.getElementById(iconId);
+            if (passwordInput && icon) {
+                if (passwordInput.type === 'password') {
+                    passwordInput.type = 'text';
+                    icon.classList.remove('fa-eye');
+                    icon.classList.add('fa-eye-slash');
+                } else {
+                    passwordInput.type = 'password';
+                    icon.classList.remove('fa-eye-slash');
+                    icon.classList.add('fa-eye');
+                }
+            }
+        }
+
+        function handleLoginSubmit(e) {
+            e.preventDefault();
+            const userVal = document.getElementById('login-username')?.value.trim().toLowerCase() || '';
+            const passVal = document.getElementById('login-password')?.value.trim() || '';
+            const errAlert = document.getElementById('login-error-alert');
+
+            const foundAccount = APP_STATE.accounts.find(a => a.username.toLowerCase() === userVal && a.password === passVal);
+
+            if (foundAccount) {
+                if (errAlert) errAlert.classList.add('hidden');
+                APP_STATE.currentUser = foundAccount;
+                APP_STATE.currentRole = foundAccount.role;
+
+                if (foundAccount.role === 'user') {
+                    const nameInput = document.getElementById('form-borrower-name');
+                    if (nameInput) nameInput.value = foundAccount.name;
+                }
+
+                const loginScreen = document.getElementById('login-screen');
+                const appWrapper = document.getElementById('app-main-wrapper');
+                
+                if (loginScreen) loginScreen.classList.add('hidden');
+                if (appWrapper) {
+                    appWrapper.classList.remove('hidden');
+                    appWrapper.classList.add('flex');
+                }
+
+                updateRoleUI();
+                populateFormTargetOptions();
+                renderDashboardSchedule();
+                renderCatalog();
+                renderMyRequests();
+                renderAdminRequests();
+                renderAdminInventory();
+                renderAdminUsers();
+                updateStats();
+                switchTab('dashboard');
+
+                showToast(`Selamat datang, ${foundAccount.name}! Mode: ${foundAccount.role === 'admin' ? 'Administrator' : 'User'}`);
+            } else {
+                if (errAlert) errAlert.classList.remove('hidden');
+            }
+        }
+
+        function logout() {
+            APP_STATE.currentUser = null;
+            const form = document.getElementById('main-login-form');
+            const errAlert = document.getElementById('login-error-alert');
+
+            if (form) form.reset();
+            if (errAlert) errAlert.classList.add('hidden');
+            
+            const passwordInput = document.getElementById('login-password');
+            const icon = document.getElementById('toggle-password-icon');
+            if (passwordInput) passwordInput.type = 'password';
+            if (icon) {
+                icon.classList.remove('fa-eye-slash');
+                icon.classList.add('fa-eye');
+            }
+
+            showLoginScreen();
+            showToast('Anda telah keluar dari aplikasi.');
+        }
+
+        function showLoginScreen() {
+            const appWrapper = document.getElementById('app-main-wrapper');
+            const loginScreen = document.getElementById('login-screen');
+
+            if (appWrapper) {
+                appWrapper.classList.add('hidden');
+                appWrapper.classList.remove('flex');
+            }
+            if (loginScreen) loginScreen.classList.remove('hidden');
+        }
+
+        function saveToLocalStorage() {
+            localStorage.setItem('smpn34_siperan_bookings', JSON.stringify(APP_STATE.bookings));
+            localStorage.setItem('smpn34_siperan_inventory', JSON.stringify(APP_STATE.inventory));
+            localStorage.setItem('smpn34_siperan_accounts', JSON.stringify(APP_STATE.accounts));
+        }
+
+        function loadFromLocalStorage() {
+            const savedBookings = localStorage.getItem('smpn34_siperan_bookings');
+            const savedInventory = localStorage.getItem('smpn34_siperan_inventory');
+            const savedAccounts = localStorage.getItem('smpn34_siperan_accounts');
+
+            if (savedBookings) APP_STATE.bookings = JSON.parse(savedBookings);
+            if (savedInventory) APP_STATE.inventory = JSON.parse(savedInventory);
+            if (savedAccounts) APP_STATE.accounts = JSON.parse(savedAccounts);
+        }
+
+        /* Navigasi Tab Sidebar */
+        function switchTab(tabId) {
+            APP_STATE.activeTab = tabId;
+
+            const sections = ['dashboard', 'booking', 'catalog', 'my-requests', 'admin-panel'];
+            sections.forEach(sec => {
+                const el = document.getElementById(`section-${sec}`);
+                if (el) el.classList.add('hidden');
+
+                const sidebarNav = document.getElementById(`sidebar-nav-${sec}`);
+                if (sidebarNav) {
+                    sidebarNav.classList.remove('sidebar-active');
+                    sidebarNav.classList.add('text-blue-100');
+                }
+            });
+
+            const activeSec = document.getElementById(`section-${tabId}`);
+            if (activeSec) activeSec.classList.remove('hidden');
+
+            const activeSidebarNav = document.getElementById(`sidebar-nav-${tabId}`);
+            if (activeSidebarNav) {
+                activeSidebarNav.classList.add('sidebar-active');
+                activeSidebarNav.classList.remove('text-blue-100');
+            }
+
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        /* ADMIN SUBTAB DROPDOWN NAVIGATOR */
+        function onAdminSubTabChange(val) {
+            switchAdminSubTab(val);
+        }
+
+        function switchAdminSubTab(subTab) {
+            APP_STATE.adminSubTab = subTab;
+            const viewReq = document.getElementById('admin-view-requests');
+            const viewInv = document.getElementById('admin-view-inventory');
+            const viewUsers = document.getElementById('admin-view-users');
+            const dropdown = document.getElementById('admin-menu-dropdown');
+
+            if (dropdown) dropdown.value = subTab;
+
+            [viewReq, viewInv, viewUsers].forEach(v => v && v.classList.add('hidden'));
+
+            if (subTab === 'requests') {
+                if (viewReq) viewReq.classList.remove('hidden');
+                renderAdminRequests();
+            } else if (subTab === 'inventory') {
+                if (viewInv) viewInv.classList.remove('hidden');
+                renderAdminInventory();
+            } else if (subTab === 'users') {
+                if (viewUsers) viewUsers.classList.remove('hidden');
+                renderAdminUsers();
+            }
+        }
+
+        function updateRoleUI() {
+            const userName = document.getElementById('user-display-name');
+            const userAvatar = document.getElementById('user-avatar-initial');
+            const dropdownRole = document.getElementById('dropdown-user-role');
+            const dropdownNip = document.getElementById('dropdown-user-nip');
+            const navAdmin = document.getElementById('sidebar-nav-admin-panel');
+
+            const current = APP_STATE.currentUser;
+
+            if (APP_STATE.currentRole === 'admin') {
+                if (userName) userName.innerText = current ? current.name : 'Administrator';
+                if (userAvatar) {
+                    userAvatar.innerText = 'A';
+                    userAvatar.className = 'w-10 h-10 rounded-full bg-emerald-600 text-white font-bold flex items-center justify-center text-sm shadow';
+                }
+                if (dropdownRole) dropdownRole.innerText = 'Administrator';
+                if (dropdownNip) dropdownNip.innerText = `NIP: ${current ? current.nip : '-'}`;
+                if (navAdmin) navAdmin.classList.remove('hidden');
+            } else {
+                if (userName) userName.innerText = current ? current.name : 'Pengguna Umum / Guru';
+                if (userAvatar) {
+                    userAvatar.innerText = 'U';
+                    userAvatar.className = 'w-10 h-10 rounded-full bg-brand-orange text-white font-bold flex items-center justify-center text-sm shadow';
+                }
+                if (dropdownRole) dropdownRole.innerText = '';
+                if (dropdownNip) dropdownNip.innerText = `NIP: ${current ? current.nip : '-'}`;
+                if (navAdmin) navAdmin.classList.add('hidden');
+            }
+        }
+
+        /* HANDLER UNTUK DROPDOWN JENIS FASILITAS DI FORMULIR */
+        function onTypeDropdownChange(selectedType) {
+            const targetLabel = document.getElementById('form-target-label');
+            const goodsSection = document.getElementById('goods-equipment-section');
+
+            if (selectedType === 'Ruangan') {
+                if (targetLabel) targetLabel.innerHTML = 'Pilih Ruangan<span class="text-red-500">*</span>';
+                if (goodsSection) goodsSection.classList.add('hidden');
+            } else {
+                if (targetLabel) targetLabel.innerHTML = 'Pilih Barang/Peralatan <span class="text-red-500">*</span>';
+                if (goodsSection) goodsSection.classList.remove('hidden');
+            }
+
+            populateFormTargetOptions();
+            checkTimeConflict();
+        }
+
+        function selectType(type) {
+            const dropdown = document.getElementById('form-facility-type-dropdown');
+            if (dropdown) dropdown.value = type;
+            onTypeDropdownChange(type);
+        }
+
+        /* PERHITUNGAN STOK TERSEDIA BERDASARKAN JADWAL TANGGAL & JAM */
+        function countOccupiedUnits(targetItem, date, startTime, endTime, excludeBookingId = null) {
+            if (!targetItem || !date || !startTime || !endTime) return 0;
+            return APP_STATE.bookings.filter(b => {
+                if (excludeBookingId && b.id === excludeBookingId) return false;
+                if (b.targetItem !== targetItem || b.date !== date || b.status === 'Dibatalkan') return false;
+                return (startTime < b.endTime && endTime > b.startTime);
+            }).length;
+        }
+
+        function populateFormTargetOptions() {
+            const selectedType = document.getElementById('form-facility-type-dropdown')?.value || 'Ruangan';
+            const date = document.getElementById('form-date')?.value;
+            const startTime = document.getElementById('form-start-time')?.value;
+            const endTime = document.getElementById('form-end-time')?.value;
+            const selectEl = document.getElementById('form-target-item');
+            if (!selectEl) return;
+            
+            const currentSelected = selectEl.value;
+            selectEl.innerHTML = '';
+
+            const filteredItems = APP_STATE.inventory.filter(inv => inv.type === selectedType);
+            filteredItems.forEach(item => {
+                const totalStock = item.stock || 1;
+                const occupied = countOccupiedUnits(item.name, date, startTime, endTime);
+                const available = Math.max(0, totalStock - occupied);
+
+                const opt = document.createElement('option');
+                opt.value = item.name;
+                opt.textContent = `${item.name} (${item.location}) - Sisa Stok Jam Ini: ${available}/${totalStock} Unit`;
+                if (available <= 0) {
+                    opt.textContent += ' [Penuh]';
+                }
+                selectEl.appendChild(opt);
+            });
+
+            if (currentSelected && filteredItems.some(i => i.name === currentSelected)) {
+                selectEl.value = currentSelected;
+            }
+
+            onTargetItemChange();
+        }
+
+        function onTargetItemChange() {
+            const selectedName = document.getElementById('form-target-item')?.value;
+            const item = APP_STATE.inventory.find(i => i.name === selectedName);
+            const equipmentBox = document.getElementById('equipment-checkboxes');
+            if (!equipmentBox) return;
+            equipmentBox.innerHTML = '';
+
+            if (item && item.defaultEquipments && item.defaultEquipments.length > 0) {
+                item.defaultEquipments.forEach((eq) => {
+                    equipmentBox.innerHTML += `
+                        <label class="flex items-center space-x-2 bg-white p-2 rounded-xl border border-orange-200 text-xs text-slate-700 font-medium cursor-pointer hover:bg-orange-100/50">
+                            <input type="checkbox" name="equipment_item" value="${eq}" checked class="rounded text-brand-orange focus:ring-brand-orange">
+                            <span>${eq}</span>
+                        </label>
+                    `;
+                });
+            } else {
+                equipmentBox.innerHTML = `<span class="text-xs text-slate-400 italic col-span-3">Tidak ada daftar kelengkapan khusus.</span>`;
+            }
+
+            checkTimeConflict();
+        }
+
+        /* CEK BENTROK STOK WAKTU & KUNCI FORMULIR BERDASARKAN JUMLAH STOK */
+        function checkTimeConflict() {
+            const targetItem = document.getElementById('form-target-item')?.value;
+            const date = document.getElementById('form-date')?.value;
+            const startTime = document.getElementById('form-start-time')?.value;
+            const endTime = document.getElementById('form-end-time')?.value;
+            const alertBox = document.getElementById('conflict-alert');
+            const alertMsg = document.getElementById('conflict-message');
+            const submitBtn = document.getElementById('btn-submit-booking');
+
+            if (!targetItem || !date || !startTime || !endTime) {
+                if (alertBox) alertBox.classList.add('hidden');
+                if (submitBtn) {
+                    submitBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+                    submitBtn.disabled = false;
+                }
+                return;
+            }
+
+            const item = APP_STATE.inventory.find(i => i.name === targetItem);
+            const totalStock = item ? (item.stock || 1) : 1;
+            const occupied = countOccupiedUnits(targetItem, date, startTime, endTime);
+
+            if (occupied >= totalStock) {
+                if (alertMsg) alertMsg.innerText = `[${targetItem}] sudah di-booking sebanyak ${occupied} unit (Stok Total: ${totalStock}) pada tanggal ${formatDateIndo(date)} jam ${startTime} - ${endTime} WIB. Stok habis untuk jam tersebut!`;
+                if (alertBox) alertBox.classList.remove('hidden');
+                if (submitBtn) {
+                    submitBtn.classList.add('opacity-50', 'cursor-not-allowed');
+                    submitBtn.disabled = true;
+                }
+            } else {
+                if (alertBox) alertBox.classList.add('hidden');
+                if (submitBtn) {
+                    submitBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+                    submitBtn.disabled = false;
+                }
+            }
+        }
+
+        function handleBookingSubmit(e) {
+            e.preventDefault();
+
+            const borrowerName = document.getElementById('form-borrower-name')?.value.trim() || '';
+            const subject = document.getElementById('form-subject')?.value.trim() || '';
+            const facilityType = document.getElementById('form-facility-type-dropdown')?.value || 'Ruangan';
+            const targetItem = document.getElementById('form-target-item')?.value || '';
+            const date = document.getElementById('form-date')?.value || '';
+            const startTime = document.getElementById('form-start-time')?.value || '';
+            const endTime = document.getElementById('form-end-time')?.value || '';
+            const notes = document.getElementById('form-notes')?.value.trim() || '';
+            const customEquip = document.getElementById('form-custom-equipment')?.value.trim() || '';
+
+            if (startTime >= endTime) {
+                showToast('Jam Selesai harus lebih lambat dari Jam Mulai!');
+                return;
+            }
+
+            const item = APP_STATE.inventory.find(i => i.name === targetItem);
+            const totalStock = item ? (item.stock || 1) : 1;
+            const occupied = countOccupiedUnits(targetItem, date, startTime, endTime);
+
+            if (occupied >= totalStock) {
+                showToast('Gagal! Stok barang/ruangan ini sudah habis dipinjam pada jam tersebut.');
+                return;
+            }
+
+            let selectedEquipments = [];
+            if (facilityType === 'Barang') {
+                const checkedNodes = document.querySelectorAll('input[name="equipment_item"]:checked');
+                checkedNodes.forEach(ch => selectedEquipments.push(ch.value));
+                if (customEquip) selectedEquipments.push(`Tambahan: ${customEquip}`);
+            }
+
+            const newBooking = {
+                id: `REQ-${Math.floor(1000 + Math.random() * 9000)}`,
+                borrowerName,
+                subject,
+                facilityType,
+                targetItem,
+                date,
+                startTime,
+                endTime,
+                equipments: selectedEquipments,
+                notes,
+                status: 'Terdaftar',
+                createdAt: new Date().toISOString()
+            };
+
+            APP_STATE.bookings.unshift(newBooking);
+            saveToLocalStorage();
+
+            renderDashboardSchedule();
+            renderMyRequests();
+            renderAdminRequests();
+            renderCatalog();
+            populateFormTargetOptions();
+            updateStats();
+
+            showToast('Peminjaman berhasil diajukan & otomatis masuk ke Papan Informasi!');
+            resetForm();
+            switchTab('dashboard');
+        }
+
+        function resetForm() {
+            const form = document.getElementById('booking-form');
+            if (form) form.reset();
+            const alertBox = document.getElementById('conflict-alert');
+            if (alertBox) alertBox.classList.add('hidden');
+            selectType('Ruangan');
+        }
+
+        /* FUNGSI PENENTU STATUS REALTIME (Terdaftar / Berjalan / Selesai) */
+        function getRealtimeBookingStatus(b) {
+            if (b.status === 'Dibatalkan') return { label: 'Dibatalkan', class: 'bg-rose-100 text-rose-700 border border-rose-200' };
+            if (b.status === 'Selesai') return { label: 'Selesai', class: 'bg-blue-100 text-brand-blue border border-blue-200' };
+
+            const now = new Date();
+            const todayStr = now.toISOString().split('T')[0];
+            const currentHourMin = now.toTimeString().substring(0, 5);
+
+            if (b.date < todayStr) {
+                return { label: 'Selesai', class: 'bg-blue-100 text-brand-blue border border-blue-200' };
+            } else if (b.date === todayStr) {
+                if (currentHourMin >= b.startTime && currentHourMin <= b.endTime) {
+                    return { label: '⚡ Berjalan', class: 'bg-amber-100 text-amber-800 border border-amber-300 font-black animate-pulse' };
+                } else if (currentHourMin > b.endTime) {
+                    return { label: 'Selesai', class: 'bg-blue-100 text-brand-blue border border-blue-200' };
+                } else {
+                    return { label: 'Terdaftar', class: 'bg-emerald-100 text-emerald-700 border border-emerald-200' };
+                }
+            } else {
+                return { label: 'Terdaftar', class: 'bg-emerald-100 text-emerald-700 border border-emerald-200' };
+            }
+        }
+
+        /* RENDER PAPAN INFORMASI TABEL DENGAN STATUS REALTIME */
+        function renderDashboardSchedule() {
+            const tbody = document.getElementById('dashboard-schedule-table-body');
+            const emptyState = document.getElementById('schedule-empty-state');
+            const searchKeyword = document.getElementById('dashboard-search')?.value.toLowerCase() || '';
+            const filterType = document.getElementById('dashboard-filter-type')?.value || 'all';
+
+            if (!tbody) return;
+            tbody.innerHTML = '';
+
+            const activeBookings = APP_STATE.bookings.filter(b => {
+                if (b.status === 'Dibatalkan') return false;
+                const matchType = (filterType === 'all' || b.facilityType === filterType);
+                const matchSearch = b.borrowerName.toLowerCase().includes(searchKeyword) || 
+                                    b.subject.toLowerCase().includes(searchKeyword) ||
+                                    b.targetItem.toLowerCase().includes(searchKeyword) ||
+                                    b.id.toLowerCase().includes(searchKeyword);
+                return matchType && matchSearch;
+            });
+
+            if (activeBookings.length === 0) {
+                if (emptyState) emptyState.classList.remove('hidden');
+                return;
+            } else {
+                if (emptyState) emptyState.classList.add('hidden');
+            }
+
+            activeBookings.forEach(b => {
+                const statusObj = getRealtimeBookingStatus(b);
+                const tr = document.createElement('tr');
+                tr.className = "hover:bg-slate-50 transition border-b border-slate-100";
+                
+                tr.innerHTML = `
+                    <td class="py-3.5 px-5 font-bold text-slate-800">
+                        <div class="flex items-center space-x-2">
+                            <i class="fa-solid fa-user-circle text-brand-orange text-base"></i>
+                            <span>${b.borrowerName}</span>
+                        </div>
+                    </td>
+                    <td class="py-3.5 px-5 font-semibold text-slate-700">
+                        <div>${b.subject}</div>
+                        ${b.equipments && b.equipments.length ? `<div class="text-[10px] text-slate-400 font-normal mt-0.5"><i class="fa-solid fa-list-check mr-1"></i>${b.equipments.join(', ')}</div>` : ''}
+                    </td>
+                    <td class="py-3.5 px-5">
+                        <span class="font-bold text-brand-blue flex items-center space-x-1.5">
+                            <i class="fa-solid ${b.facilityType === 'Ruangan' ? 'fa-door-open text-brand-blue' : 'fa-box text-brand-orange'}"></i>
+                            <span>${b.targetItem}</span>
+                        </span>
+                        <span class="text-[10px] font-bold px-2 py-0.5 rounded ${b.facilityType === 'Ruangan' ? 'bg-blue-100 text-brand-blue' : 'bg-orange-100 text-brand-orange'} mt-1 inline-block">
+                            ${b.facilityType}
+                        </span>
+                    </td>
+                    <td class="py-3.5 px-5">
+                        <div class="font-bold text-slate-800"><i class="fa-regular fa-calendar-check text-brand-orange mr-1.5"></i>${formatDateIndo(b.date)}</div>
+                        <div class="font-semibold text-slate-600 mt-0.5"><i class="fa-regular fa-clock text-slate-400 mr-1.5"></i>Pukul ${b.startTime} - ${b.endTime} WIB</div>
+                    </td>
+                    <td class="py-3.5 px-5">
+                        <span class="px-2.5 py-1 text-[11px] font-bold rounded-full ${statusObj.class}">
+                            ${statusObj.label}
+                        </span>
+                    </td>
+                    <td class="py-3.5 px-4 text-center">
+                        <button onclick="openReceiptModal('${b.id}')" title="Lihat/Cetak Bukti Pinjam" class="p-2 bg-blue-50 text-brand-blue hover:bg-brand-blue hover:text-white rounded-xl font-bold transition">
+                            <i class="fa-solid fa-print"></i>
+                        </button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        /* Render Catalog Section */
+        function renderCatalog(filter = 'all') {
+            const grid = document.getElementById('catalog-grid');
+            if (!grid) return;
+            grid.innerHTML = '';
+
+            const items = filter === 'all' ? APP_STATE.inventory : APP_STATE.inventory.filter(i => i.type === filter);
+
+            items.forEach(item => {
+                const totalStock = item.stock || 1;
+                const activeBookingsCount = APP_STATE.bookings.filter(b => b.targetItem === item.name && b.status === 'Terdaftar').length;
+
+                const card = document.createElement('div');
+                card.className = "bg-white rounded-3xl border border-slate-200 p-5 shadow-sm hover:shadow-md transition flex flex-col justify-between";
+                card.innerHTML = `
+                    <div>
+                        <div class="flex justify-between items-start mb-3">
+                            <span class="text-xs font-bold px-2.5 py-1 rounded-lg ${item.type === 'Ruangan' ? 'bg-blue-100 text-brand-blue' : 'bg-orange-100 text-brand-orange'}">
+                                ${item.type}
+                            </span>
+                            <span class="text-xs font-semibold px-2 py-0.5 rounded-full ${activeBookingsCount > 0 ? 'bg-amber-100 text-amber-700' : 'bg-emerald-100 text-emerald-700'}">
+                                ${activeBookingsCount > 0 ? `${activeBookingsCount} Jadwal Terdaftar` : 'Tersedia Lengkap'}
+                            </span>
+                        </div>
+                        <h4 class="font-bold text-slate-800 text-lg">${item.name}</h4>
+                        <p class="text-xs text-slate-500 mt-1"><i class="fa-solid fa-location-dot text-slate-400 mr-1"></i> ${item.location}</p>
+                        <p class="text-xs font-semibold text-brand-blue mt-1"><i class="fa-solid fa-cubes text-brand-orange mr-1"></i> Stok Total: ${totalStock} Unit</p>
+
+                        <div class="mt-4 bg-slate-50 p-3 rounded-2xl border border-slate-100">
+                            <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1">Kelengkapan Standar:</p>
+                            <ul class="text-xs text-slate-600 space-y-1">
+                                ${item.defaultEquipments && item.defaultEquipments.length ? item.defaultEquipments.map(e => `<li class="flex items-center space-x-1.5"><i class="fa-solid fa-check text-emerald-500 text-[10px]"></i><span>${e}</span></li>`).join('') : '<li class="text-slate-400 italic">Tidak ada rincian tambahan</li>'}
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="mt-5 pt-3 border-t border-slate-100">
+                        <button onclick="quickBookItem('${item.name}', '${item.type}')" class="w-full py-2.5 bg-slate-100 hover:bg-brand-blue hover:text-white text-brand-blue font-bold rounded-xl text-xs transition flex items-center justify-center space-x-1.5">
+                            <i class="fa-solid fa-calendar-plus"></i>
+                            <span>Pilih & Ajukan Pinjam</span>
+                        </button>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        function filterCatalog(type) {
+            ['all', 'ruang', 'barang'].forEach(t => {
+                const btn = document.getElementById(`cat-filter-${t}`);
+                if (btn) btn.className = 'px-3 py-1.5 rounded-lg text-slate-600 hover:text-slate-900';
+            });
+
+            if (type === 'all') document.getElementById('cat-filter-all')?.setAttribute('class', 'px-3 py-1.5 rounded-lg bg-white shadow-xs text-brand-blue font-bold');
+            else if (type === 'Ruangan') document.getElementById('cat-filter-ruang')?.setAttribute('class', 'px-3 py-1.5 rounded-lg bg-white shadow-xs text-brand-blue font-bold');
+            else document.getElementById('cat-filter-barang')?.setAttribute('class', 'px-3 py-1.5 rounded-lg bg-white shadow-xs text-brand-blue font-bold');
+
+            renderCatalog(type);
+        }
+
+        function quickBookItem(name, type) {
+            switchTab('booking');
+            selectType(type);
+            const selectTarget = document.getElementById('form-target-item');
+            if (selectTarget) selectTarget.value = name;
+            onTargetItemChange();
+        }
+
+        /* Render User Requests Table */
+        function renderMyRequests() {
+            // Helper dummy function
+        }
+
+        /* Render Admin Requests Table */
+        function renderAdminRequests() {
+            const tbody = document.getElementById('admin-requests-table-body');
+            const statusFilter = document.getElementById('admin-filter-status')?.value || 'all';
+            const startDate = document.getElementById('admin-filter-date-start')?.value || '';
+            const endDate = document.getElementById('admin-filter-date-end')?.value || '';
+
+            if (!tbody) return;
+            tbody.innerHTML = '';
+
+            const filtered = APP_STATE.bookings.filter(b => {
+                const matchStatus = (statusFilter === 'all' || b.status === statusFilter);
+                let matchDate = true;
+                if (startDate && b.date < startDate) matchDate = false;
+                if (endDate && b.date > endDate) matchDate = false;
+                return matchStatus && matchDate;
+            });
+
+            filtered.forEach(b => {
+                const statusObj = getRealtimeBookingStatus(b);
+                const tr = document.createElement('tr');
+                tr.className = "hover:bg-slate-50 border-b border-slate-100 text-xs";
+                tr.innerHTML = `
+                    <td class="py-3 px-4 font-mono font-bold text-slate-700">${b.id}</td>
+                    <td class="py-3 px-4 font-semibold text-slate-800">${b.borrowerName}</td>
+                    <td class="py-3 px-4 text-slate-600">${b.subject}</td>
+                    <td class="py-3 px-4">
+                        <span class="font-bold text-brand-blue">${b.targetItem}</span>
+                        <div class="text-[10px] text-slate-400">${b.facilityType}</div>
+                    </td>
+                    <td class="py-3 px-4">
+                        ${b.equipments && b.equipments.length ? b.equipments.map(e => `<span class="inline-block bg-slate-100 text-slate-600 px-1.5 py-0.5 rounded mr-1 mb-1 text-[10px]">${e}</span>`).join('') : '-'}
+                    </td>
+                    <td class="py-3 px-4">
+                        <div class="font-semibold text-slate-800">${formatDateIndo(b.date)}</div>
+                        <div class="text-slate-500">${b.startTime} - ${b.endTime} WIB</div>
+                    </td>
+                    <td class="py-3 px-4">
+                        <span class="px-2 py-0.5 font-bold rounded-full ${statusObj.class}">
+                            ${statusObj.label}
+                        </span>
+                    </td>
+                    <td class="py-3 px-4">
+                        <div class="flex items-center justify-center space-x-1.5">
+                            ${b.status === 'Terdaftar' ? `
+                                <button onclick="openEditBookingModal('${b.id}')" title="Edit Permohonan Peminjaman" class="p-1.5 bg-blue-100 hover:bg-brand-blue hover:text-white text-brand-blue rounded-lg font-bold transition">
+                                    <i class="fa-solid fa-pen-to-square"></i>
+                                </button>
+                                <button onclick="updateBookingStatus('${b.id}', 'Dibatalkan')" title="Batalkan Peminjaman" class="p-1.5 bg-amber-100 hover:bg-amber-600 hover:text-white text-amber-700 rounded-lg font-bold transition">
+                                    <i class="fa-solid fa-ban"></i>
+                                </button>
+                            ` : ''}
+                            <button onclick="deleteBooking('${b.id}')" title="Hapus Data Permanent" class="p-1.5 bg-slate-100 hover:bg-red-500 hover:text-white text-slate-400 rounded-lg transition">
+                                <i class="fa-solid fa-trash"></i>
+                            </button>
+                        </div>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        /* LOGIKA UNTUK MODAL EDIT PERMOHONAN PEMINJAMAN OLEH ADMIN */
+        function openEditBookingModal(bookingId) {
+            const b = APP_STATE.bookings.find(item => item.id === bookingId);
+            if (!b) return;
+
+            document.getElementById('edit-booking-id').value = b.id;
+            document.getElementById('edit-borrower-name').value = b.borrowerName;
+            document.getElementById('edit-subject').value = b.subject;
+            document.getElementById('edit-facility-type').value = b.facilityType;
+            document.getElementById('edit-date').value = b.date;
+            document.getElementById('edit-start-time').value = b.startTime;
+            document.getElementById('edit-end-time').value = b.endTime;
+            document.getElementById('edit-notes').value = b.notes || '';
+
+            populateEditTargetOptions(b.facilityType, b.targetItem);
+
+            const modal = document.getElementById('modal-edit-booking');
+            if (modal) modal.classList.remove('hidden');
+        }
+
+        function onEditFacilityTypeChange(typeVal) {
+            populateEditTargetOptions(typeVal);
+        }
+
+        function populateEditTargetOptions(typeVal, currentTargetName = null) {
+            const selectEl = document.getElementById('edit-target-item');
+            if (!selectEl) return;
+            selectEl.innerHTML = '';
+
+            const items = APP_STATE.inventory.filter(i => i.type === typeVal);
+            items.forEach(i => {
+                const opt = document.createElement('option');
+                opt.value = i.name;
+                opt.textContent = `${i.name} (${i.location})`;
+                selectEl.appendChild(opt);
+            });
+
+            if (currentTargetName && items.some(i => i.name === currentTargetName)) {
+                selectEl.value = currentTargetName;
+            }
+        }
+
+        function handleEditBookingSubmit(e) {
+            e.preventDefault();
+
+            const id = document.getElementById('edit-booking-id')?.value;
+            const borrowerName = document.getElementById('edit-borrower-name')?.value.trim();
+            const subject = document.getElementById('edit-subject')?.value.trim();
+            const facilityType = document.getElementById('edit-facility-type')?.value;
+            const targetItem = document.getElementById('edit-target-item')?.value;
+            const date = document.getElementById('edit-date')?.value;
+            const startTime = document.getElementById('edit-start-time')?.value;
+            const endTime = document.getElementById('edit-end-time')?.value;
+            const notes = document.getElementById('edit-notes')?.value.trim();
+
+            if (startTime >= endTime) {
+                showToast('Jam Selesai harus lebih lambat dari Jam Mulai!');
+                return;
+            }
+
+            // Cek konflik stok untuk edit (kecuali data ini sendiri)
+            const item = APP_STATE.inventory.find(i => i.name === targetItem);
+            const totalStock = item ? (item.stock || 1) : 1;
+            const occupied = countOccupiedUnits(targetItem, date, startTime, endTime, id);
+
+            if (occupied >= totalStock) {
+                showToast(`Gagal! [${targetItem}] sudah penuh ter-booking pada tanggal & jam tersebut.`);
+                return;
+            }
+
+            const idx = APP_STATE.bookings.findIndex(b => b.id === id);
+            if (idx !== -1) {
+                APP_STATE.bookings[idx].borrowerName = borrowerName;
+                APP_STATE.bookings[idx].subject = subject;
+                APP_STATE.bookings[idx].facilityType = facilityType;
+                APP_STATE.bookings[idx].targetItem = targetItem;
+                APP_STATE.bookings[idx].date = date;
+                APP_STATE.bookings[idx].startTime = startTime;
+                APP_STATE.bookings[idx].endTime = endTime;
+                APP_STATE.bookings[idx].notes = notes;
+
+                saveToLocalStorage();
+                renderDashboardSchedule();
+                renderAdminRequests();
+                populateFormTargetOptions();
+                updateStats();
+
+                closeModal('modal-edit-booking');
+                showToast(`Data permohonan ${id} berhasil diperbarui oleh Admin!`);
+            }
+        }
+
+        function updateBookingStatus(id, newStatus) {
+            const booking = APP_STATE.bookings.find(b => b.id === id);
+            if (booking) {
+                booking.status = newStatus;
+                saveToLocalStorage();
+                renderDashboardSchedule();
+                renderAdminRequests();
+                populateFormTargetOptions();
+                updateStats();
+                showToast(`Status permohonan ${id} diubah menjadi: ${newStatus}`);
+            }
+        }
+
+        function deleteBooking(id) {
+            showConfirmModal(
+                'Hapus Peminjaman',
+                `Apakah Anda yakin ingin menghapus permanen data peminjaman ${id}?`,
+                function() {
+                    APP_STATE.bookings = APP_STATE.bookings.filter(b => b.id !== id);
+                    saveToLocalStorage();
+                    renderDashboardSchedule();
+                    renderAdminRequests();
+                    populateFormTargetOptions();
+                    updateStats();
+                    showToast('Data peminjaman berhasil dihapus.');
+                }
+            );
+        }
+
+        /* Render Admin Inventory CRUD */
+        function renderAdminInventory() {
+            const tbody = document.getElementById('admin-inventory-table-body');
+            const invCount = document.getElementById('admin-inv-count');
+            if (invCount) invCount.innerText = APP_STATE.inventory.length;
+            if (!tbody) return;
+            tbody.innerHTML = '';
+
+            APP_STATE.inventory.forEach(inv => {
+                const tr = document.createElement('tr');
+                tr.className = "hover:bg-slate-50 border-b border-slate-100 text-xs";
+                tr.innerHTML = `
+                    <td class="py-3 px-4 font-mono font-bold text-slate-700">${inv.id}</td>
+                    <td class="py-3 px-4 font-bold ${inv.type === 'Ruangan' ? 'text-brand-blue' : 'text-brand-orange'}">${inv.type}</td>
+                    <td class="py-3 px-4 font-bold text-slate-800">${inv.name}</td>
+                    <td class="py-3 px-4 font-bold text-emerald-600">${inv.stock || 1} Unit</td>
+                    <td class="py-3 px-4 text-slate-500">${inv.location}</td>
+                    <td class="py-3 px-4 text-slate-600">${inv.defaultEquipments && inv.defaultEquipments.length ? inv.defaultEquipments.join(', ') : '-'}</td>
+                    <td class="py-3 px-4"><span class="bg-emerald-100 text-emerald-700 px-2 py-0.5 rounded font-bold">Aktif</span></td>
+                    <td class="py-3 px-4 text-center">
+                        <div class="flex items-center justify-center space-x-1.5">
+                            <button onclick="openInventoryModal('${inv.id}')" title="Ubah Data Inventaris" class="p-1.5 bg-blue-50 hover:bg-brand-blue hover:text-white text-brand-blue rounded-lg transition">
+                                <i class="fa-solid fa-pen-to-square"></i>
+                            </button>
+                            <button onclick="deleteInventory('${inv.id}')" title="Hapus Inventaris" class="p-1.5 bg-rose-50 hover:bg-rose-600 hover:text-white text-rose-600 rounded-lg transition">
+                                <i class="fa-solid fa-trash"></i>
+                            </button>
+                        </div>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function openInventoryModal(editId = null) {
+            const form = document.getElementById('inventory-form');
+            if (form) form.reset();
+
+            const modalTitle = document.getElementById('modal-inventory-title');
+            const editIdInput = document.getElementById('inv-edit-id');
+            const categoryInput = document.getElementById('inv-category');
+            const nameInput = document.getElementById('inv-name');
+            const stockInput = document.getElementById('inv-stock');
+            const locationInput = document.getElementById('inv-location');
+            const equipmentsInput = document.getElementById('inv-equipments');
+
+            if (editId) {
+                const item = APP_STATE.inventory.find(i => i.id === editId);
+                if (item) {
+                    if (modalTitle) modalTitle.innerText = `Edit Inventaris (${item.name})`;
+                    if (editIdInput) editIdInput.value = item.id;
+                    if (categoryInput) categoryInput.value = item.type;
+                    if (nameInput) nameInput.value = item.name;
+                    if (stockInput) stockInput.value = item.stock || 1;
+                    if (locationInput) locationInput.value = item.location;
+                    if (equipmentsInput) equipmentsInput.value = item.defaultEquipments ? item.defaultEquipments.join(', ') : '';
+                }
+            } else {
+                if (modalTitle) modalTitle.innerText = "Tambah Inventaris Baru";
+                if (editIdInput) editIdInput.value = "";
+                if (stockInput) stockInput.value = "1";
+            }
+
+            const modal = document.getElementById('modal-inventory');
+            if (modal) modal.classList.remove('hidden');
+        }
+
+        function handleInventorySubmit(e) {
+            e.preventDefault();
+            const editId = document.getElementById('inv-edit-id')?.value.trim();
+            const category = document.getElementById('inv-category')?.value || 'Ruangan';
+            const name = document.getElementById('inv-name')?.value.trim() || '';
+            const stock = parseInt(document.getElementById('inv-stock')?.value) || 1;
+            const location = document.getElementById('inv-location')?.value.trim() || '';
+            const equipmentsRaw = document.getElementById('inv-equipments')?.value.trim() || '';
+
+            const equipments = equipmentsRaw ? equipmentsRaw.split(',').map(s => s.trim()).filter(Boolean) : [];
+
+            if (editId) {
+                const idx = APP_STATE.inventory.findIndex(i => i.id === editId);
+                if (idx !== -1) {
+                    APP_STATE.inventory[idx] = {
+                        id: editId,
+                        type: category,
+                        name: name,
+                        stock: stock,
+                        location: location,
+                        defaultEquipments: equipments
+                    };
+                    showToast(`Inventaris '${name}' berhasil diperbarui!`);
+                }
+            } else {
+                const newItem = {
+                    id: `INV-${Math.floor(10 + Math.random() * 90)}`,
+                    type: category,
+                    name: name,
+                    stock: stock,
+                    location: location,
+                    defaultEquipments: equipments
+                };
+                APP_STATE.inventory.push(newItem);
+                showToast(`Inventaris '${name}' berhasil ditambahkan!`);
+            }
+
+            saveToLocalStorage();
+            populateFormTargetOptions();
+            renderCatalog();
+            renderAdminInventory();
+            updateStats();
+
+            closeModal('modal-inventory');
+        }
+
+        function deleteInventory(id) {
+            const item = APP_STATE.inventory.find(i => i.id === id);
+            const itemName = item ? item.name : id;
+
+            showConfirmModal(
+                'Hapus Inventaris',
+                `Apakah Anda yakin ingin menghapus inventaris '${itemName}'?`,
+                function() {
+                    APP_STATE.inventory = APP_STATE.inventory.filter(i => i.id !== id);
+                    saveToLocalStorage();
+                    populateFormTargetOptions();
+                    renderCatalog();
+                    renderAdminInventory();
+                    updateStats();
+                    showToast(`Inventaris '${itemName}' berhasil dihapus.`);
+                }
+            );
+        }
+
+        /* RENDER ADMIN USER MANAGEMENT (AKUN PENGGUNA) */
+        function renderAdminUsers() {
+            const tbody = document.getElementById('admin-users-table-body');
+            if (!tbody) return;
+            tbody.innerHTML = '';
+
+            APP_STATE.accounts.forEach(acc => {
+                const isAdmin = acc.role === 'admin';
+                const isCurrentLoggedUser = APP_STATE.currentUser && APP_STATE.currentUser.username === acc.username;
+
+                const tr = document.createElement('tr');
+                tr.className = "hover:bg-slate-50 border-b border-slate-100 text-xs";
+                tr.innerHTML = `
+                    <td class="py-3 px-4 font-mono font-bold text-slate-800">
+                        <i class="fa-solid ${isAdmin ? 'fa-user-gear text-emerald-600' : 'fa-user text-brand-orange'} mr-1.5"></i>
+                        ${acc.username}
+                        ${isCurrentLoggedUser ? '<span class="ml-1 text-[9px] bg-blue-100 text-brand-blue px-1.5 py-0.5 rounded font-bold">Anda</span>' : ''}
+                    </td>
+                    <td class="py-3 px-4">
+                        <div class="font-bold text-slate-800">${acc.name}</div>
+                    </td>
+                    <td class="py-3 px-4">
+                        <span class="px-2 py-0.5 font-bold rounded-full ${isAdmin ? 'bg-emerald-100 text-emerald-700' : 'bg-orange-100 text-brand-orange'}">
+                            ${isAdmin ? 'Administrator' : 'User'}
+                        </span>
+                    </td>
+                    <td class="py-3 px-4 font-mono text-slate-600">
+                        <span class="bg-slate-100 px-2 py-1 rounded text-[11px] font-semibold">${acc.password}</span>
+                    </td>
+                    <td class="py-3 px-4 text-center">
+                        <div class="flex items-center justify-center space-x-1.5">
+                            <button onclick="openUserModal('${acc.username}')" title="Ubah Akun" class="p-1.5 bg-blue-50 hover:bg-brand-blue hover:text-white text-brand-blue rounded-lg transition">
+                                <i class="fa-solid fa-pen-to-square"></i>
+                            </button>
+                            ${!isCurrentLoggedUser ? `
+                                <button onclick="deleteUser('${acc.username}')" title="Hapus Akun" class="p-1.5 bg-rose-50 hover:bg-rose-600 hover:text-white text-rose-600 rounded-lg transition">
+                                    <i class="fa-solid fa-trash"></i>
+                                </button>
+                            ` : '<span class="text-[10px] text-slate-300 italic px-1">Aktif</span>'}
+                        </div>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function openUserModal(editUsername = null) {
+            const form = document.getElementById('user-form');
+            if (form) form.reset();
+
+            const modalTitle = document.getElementById('modal-user-title');
+            const oldUserInput = document.getElementById('user-old-username');
+            const userInput = document.getElementById('user-username');
+            const passInput = document.getElementById('user-password');
+            const nameInput = document.getElementById('user-name');
+            const roleInput = document.getElementById('user-role');
+            const nipInput = document.getElementById('user-nip');
+
+            if (editUsername) {
+                const targetAcc = APP_STATE.accounts.find(a => a.username === editUsername);
+                if (targetAcc) {
+                    if (modalTitle) modalTitle.innerText = `Edit Akun Pengguna (${editUsername})`;
+                    if (oldUserInput) oldUserInput.value = targetAcc.username;
+                    if (userInput) userInput.value = targetAcc.username;
+                    if (passInput) passInput.value = targetAcc.password;
+                    if (nameInput) nameInput.value = targetAcc.name;
+                    if (roleInput) roleInput.value = targetAcc.role;
+                    if (nipInput) nipInput.value = targetAcc.nip || '';
+                }
+            } else {
+                if (modalTitle) modalTitle.innerText = "Tambah Akun Pengguna Baru";
+                if (oldUserInput) oldUserInput.value = "";
+            }
+
+            const modal = document.getElementById('modal-user');
+            if (modal) modal.classList.remove('hidden');
+        }
+
+        function handleUserSubmit(e) {
+            e.preventDefault();
+
+            const oldUsername = document.getElementById('user-old-username')?.value.trim();
+            const username = document.getElementById('user-username')?.value.trim().toLowerCase();
+            const password = document.getElementById('user-password')?.value.trim();
+            const name = document.getElementById('user-name')?.value.trim();
+            const role = document.getElementById('user-role')?.value || 'user';
+            const nip = document.getElementById('user-nip')?.value.trim() || '-';
+
+            if (!username || !password || !name) {
+                showToast('Mohon isi field bertanda bintang (*)');
+                return;
+            }
+
+            if (oldUsername) {
+                const userIdx = APP_STATE.accounts.findIndex(a => a.username === oldUsername);
+                if (userIdx !== -1) {
+                    if (oldUsername !== username && APP_STATE.accounts.some(a => a.username === username)) {
+                        showToast(`Username '${username}' sudah digunakan akun lain!`);
+                        return;
+                    }
+
+                    APP_STATE.accounts[userIdx] = { username, password, name, role, nip };
+                    
+                    if (APP_STATE.currentUser && APP_STATE.currentUser.username === oldUsername) {
+                        APP_STATE.currentUser = APP_STATE.accounts[userIdx];
+                        APP_STATE.currentRole = role;
+                        updateRoleUI();
+                    }
+
+                    showToast(`Akun '${username}' berhasil diperbarui!`);
+                }
+            } else {
+                if (APP_STATE.accounts.some(a => a.username === username)) {
+                    showToast(`Username '${username}' sudah ada. Silakan gunakan username lain.`);
+                    return;
+                }
+
+                APP_STATE.accounts.push({ username, password, name, role, nip });
+                showToast(`Akun pengguna '${username}' berhasil ditambahkan!`);
+            }
+
+            saveToLocalStorage();
+            renderAdminUsers();
+            closeModal('modal-user');
+        }
+
+        function deleteUser(username) {
+            if (APP_STATE.currentUser && APP_STATE.currentUser.username === username) {
+                showToast('Anda tidak dapat menghapus akun Anda sendiri yang sedang aktif!');
+                return;
+            }
+
+            showConfirmModal(
+                'Hapus Akun Pengguna',
+                `Apakah Anda yakin ingin menghapus akun pengguna '${username}'?`,
+                function() {
+                    APP_STATE.accounts = APP_STATE.accounts.filter(a => a.username !== username);
+                    saveToLocalStorage();
+                    renderAdminUsers();
+                    showToast(`Akun '${username}' telah dihapus.`);
+                }
+            );
+        }
+
+        /* SPREADSHEET RECAP EXPORT LOGIC */
+        function exportToExcel() {
+            if (APP_STATE.bookings.length === 0) {
+                showToast('Tidak ada data peminjaman untuk di-rekap.');
+                return;
+            }
+
+            const exportData = APP_STATE.bookings.map((b, index) => {
+                const statusObj = getRealtimeBookingStatus(b);
+                return {
+                    'No': index + 1,
+                    'ID Permohonan': b.id,
+                    'Nama Peminjam': b.borrowerName,
+                    'Mata Pelajaran / Keperluan': b.subject,
+                    'Kategori Fasilitas': b.facilityType,
+                    'Nama Barang / Ruangan': b.targetItem,
+                    'Tanggal Peminjaman': b.date,
+                    'Jam Mulai': b.startTime,
+                    'Jam Selesai': b.endTime,
+                    'Rincian Kelengkapan Barang': b.equipments ? b.equipments.join('; ') : '-',
+                    'Catatan Extra': b.notes || '-',
+                    'Status Realtime': statusObj.label,
+                    'Waktu Pengajuan': new Date(b.createdAt).toLocaleString('id-ID')
+                };
+            });
+
+            const worksheet = XLSX.utils.json_to_sheet(exportData);
+            const workbook = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(workbook, worksheet, "Rekap Peminjaman 34");
+
+            worksheet['!cols'] = [
+                { wch: 4 }, { wch: 14 }, { wch: 22 }, { wch: 24 }, { wch: 16 }, { wch: 30 }, { wch: 18 }, { wch: 10 }, { wch: 10 }, { wch: 35 }, { wch: 20 }, { wch: 20 }, { wch: 20 }
+            ];
+
+            const currentDate = new Date().toISOString().split('T')[0];
+            XLSX.writeFile(workbook, `REKAP_PEMINJAMAN_UPTD_SMPN34_DEPOK_${currentDate}.xlsx`);
+            showToast('Spreadsheet rekapitulasi berhasil diunduh!');
+        }
+
+        /* Printable Receipt Modal */
+        function openReceiptModal(id) {
+            const b = APP_STATE.bookings.find(item => item.id === id);
+            if (!b) return;
+
+            const statusObj = getRealtimeBookingStatus(b);
+
+            const recId = document.getElementById('rec-id');
+            const recName = document.getElementById('rec-name');
+            const recSubject = document.getElementById('rec-subject');
+            const recTarget = document.getElementById('rec-target');
+            const recDate = document.getElementById('rec-date');
+            const recTime = document.getElementById('rec-time');
+            const recEquipments = document.getElementById('rec-equipments');
+            const badge = document.getElementById('rec-status-badge');
+
+            if (recId) recId.innerText = b.id;
+            if (recName) recName.innerText = b.borrowerName;
+            if (recSubject) recSubject.innerText = b.subject;
+            if (recTarget) recTarget.innerText = b.targetItem;
+            if (recDate) recDate.innerText = formatDateIndo(b.date);
+            if (recTime) recTime.innerText = `${b.startTime} - ${b.endTime} WIB`;
+            if (recEquipments) recEquipments.innerText = b.equipments && b.equipments.length ? b.equipments.join(', ') : 'Tidak ada kelengkapan khusus';
+            
+            if (badge) {
+                badge.innerText = statusObj.label.toUpperCase();
+                badge.className = `mt-2 inline-block px-3 py-1 text-xs font-bold rounded-full ${statusObj.class}`;
+            }
+
+            const modal = document.getElementById('modal-receipt');
+            if (modal) modal.classList.remove('hidden');
+        }
+
+        /* Utility Functions */
+        function updateStats() {
+            const statTotal = document.getElementById('stat-total');
+            const statRunning = document.getElementById('stat-running');
+            const statApproved = document.getElementById('stat-approved');
+            const statInventory = document.getElementById('stat-inventory');
+            const pendingBadge = document.getElementById('pending-count-badge');
+
+            const now = new Date();
+            const todayStr = now.toISOString().split('T')[0];
+            const currentHourMin = now.toTimeString().substring(0, 5);
+
+            let runningCount = 0;
+            let upcomingCount = 0;
+
+            APP_STATE.bookings.forEach(b => {
+                if (b.status === 'Dibatalkan' || b.status === 'Selesai') return;
+                if (b.date === todayStr && currentHourMin >= b.startTime && currentHourMin <= b.endTime) {
+                    runningCount++;
+                } else if (b.date > todayStr || (b.date === todayStr && currentHourMin < b.startTime)) {
+                    upcomingCount++;
+                }
+            });
+
+            if (statTotal) statTotal.innerText = APP_STATE.bookings.length;
+            if (statRunning) statRunning.innerText = runningCount;
+            if (statApproved) statApproved.innerText = upcomingCount;
+            if (statInventory) statInventory.innerText = APP_STATE.inventory.length;
+            if (pendingBadge) pendingBadge.innerText = APP_STATE.bookings.filter(b => b.status === 'Terdaftar').length;
+        }
+
+        function getStatusBadgeClass(status) {
+            switch (status) {
+                case 'Terdaftar': return 'bg-emerald-100 text-emerald-700';
+                case 'Selesai': return 'bg-blue-100 text-brand-blue';
+                case 'Dibatalkan': return 'bg-rose-100 text-rose-700';
+                default: return 'bg-slate-100 text-slate-700';
+            }
+        }
+
+        function formatDateIndo(dateStr) {
+            if (!dateStr) return '-';
+            const date = new Date(dateStr);
+            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            return date.toLocaleDateString('id-ID', options);
+        }
+
+        function closeModal(modalId) {
+            const modal = document.getElementById(modalId);
+            if (modal) modal.classList.add('hidden');
+        }
+
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            const msgEl = document.getElementById('toast-message');
+            if (msgEl) msgEl.innerText = message;
+            if (toast) {
+                toast.classList.remove('translate-y-20', 'opacity-0');
+                setTimeout(() => {
+                    toast.classList.add('translate-y-20', 'opacity-0');
+                }, 3500);
+            }
+        }
+    </script>
+</body>
+</html>
